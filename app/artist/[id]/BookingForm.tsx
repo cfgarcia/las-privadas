@@ -53,7 +53,8 @@ export default function BookingForm({ artistId, user }: { artistId: string, user
     const [formData, setFormData] = useState({
         hours: "1",
         venue: "", // New required field for Business
-        clientName: user?.name || "",
+        firstName: user?.name?.split(' ')[0] || "",
+        lastName: user?.name?.split(' ').slice(1).join(' ') || "",
         city: "",
         state: "",
         country: "México",
@@ -115,7 +116,7 @@ export default function BookingForm({ artistId, user }: { artistId: string, user
             city: formData.city,
             state: formData.state,
             country: formData.country,
-            clientName: formData.clientName,
+            clientName: `${formData.firstName} ${formData.lastName}`.trim(),
             clientEmail: user?.email || null,
             cellphone: `${formData.countryCode} ${formData.cellphone}`,
             hasWhatsapp: formData.hasWhatsapp,
@@ -188,7 +189,7 @@ export default function BookingForm({ artistId, user }: { artistId: string, user
                 <div className="absolute inset-3 border border-gold/20 pointer-events-none rounded-[2px]"></div>
 
                 {/* Content */}
-                <div className="relative p-4 sm:p-12 z-10">
+                <div className="relative px-3 py-6 sm:p-12 z-10">
                     {/* Header - Hide on Success Step for cleaner look */}
                     {currentStep !== 4 && (
                         <div className="text-center mb-6 sm:mb-10">
@@ -448,14 +449,28 @@ export default function BookingForm({ artistId, user }: { artistId: string, user
                                         </motion.div>
                                     )}
 
-                                    <PremiumInput
-                                        label={t.booking.name_label}
-                                        name="clientName"
-                                        value={formData.clientName}
-                                        onChange={handleInputChange}
-                                        required
-                                        placeholder="Juan Perez"
-                                    />
+                                    <div className="flex gap-4">
+                                        <div className="flex-1">
+                                            <PremiumInput
+                                                label={t.booking.name_label || "Nombre"}
+                                                name="firstName"
+                                                value={formData.firstName}
+                                                onChange={handleInputChange}
+                                                required
+                                                placeholder="Juan"
+                                            />
+                                        </div>
+                                        <div className="flex-1">
+                                            <PremiumInput
+                                                label="Apellido"
+                                                name="lastName"
+                                                value={formData.lastName}
+                                                onChange={handleInputChange}
+                                                required
+                                                placeholder="Pérez"
+                                            />
+                                        </div>
+                                    </div>
 
                                     <div className="group">
                                         <label className="block text-xs font-bold uppercase text-leather/60 mb-1 tracking-widest group-focus-within:text-gold">
