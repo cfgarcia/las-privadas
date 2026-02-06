@@ -15,11 +15,14 @@ serve(async (req) => {
     }
 
     try {
-        const { artistName, date, hours, city, state, clientName, cellphone, hasWhatsapp, bookingId } = await req.json()
+        const { artistName, date, hours, city, state, clientName, clientEmail, cellphone, hasWhatsapp, bookingId, bookingType, venue } = await req.json()
 
         if (!botToken || !chatId) {
             throw new Error("Missing Telegram Configuration")
         }
+
+        const typeLabel = bookingType === 'business' ? 'Business 💼' : 'Personal 👤'
+        const venueHtml = venue ? `<b>Venue:</b> ${venue}\n` : ''
 
         const message = `
 <b>New Booking Request!</b> 🎵
@@ -28,9 +31,14 @@ serve(async (req) => {
 <b>Date:</b> ${new Date(date).toLocaleDateString()}
 <b>Hours:</b> ${hours}
 
+<b>Event Details:</b>
+<b>Type:</b> ${typeLabel}
+${venueHtml}
+<b>Location:</b> ${city}, ${state}
+
 <b>Client Details:</b>
 <b>Name:</b> ${clientName}
-<b>Location:</b> ${city}, ${state}
+<b>Email:</b> ${clientEmail ? clientEmail : 'Not provided (Guest)'}
 <b>Phone:</b> ${cellphone} ${hasWhatsapp ? '(WhatsApp)' : ''}
 
 <pre>Booking ID: ${bookingId}</pre>

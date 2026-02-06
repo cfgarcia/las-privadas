@@ -16,10 +16,12 @@ export async function POST(request: Request) {
 
     try {
         const body = await request.json()
-        const { artistId, date, hours, city, state, clientName, cellphone, hasWhatsapp } = body
+        console.log("[API] Booking Request Body:", body)
 
+        const { artistId, date, hours, city, state, clientName, clientEmail, cellphone, hasWhatsapp, bookingType, venue } = body
         // Simple validation
         if (!artistId || !date || !hours || !city || !state || !clientName || !cellphone) {
+            console.error("[API] Missing fields:", { artistId, date, hours, city, state, clientName, cellphone })
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
         }
 
@@ -32,6 +34,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Artist not found" }, { status: 404 })
         }
 
+        console.log("[API] Creating booking in DB...")
         const booking = await prisma.booking.create({
             data: {
                 artistId,
@@ -40,11 +43,15 @@ export async function POST(request: Request) {
                 city,
                 state,
                 clientName,
+                clientEmail,
                 cellphone,
                 hasWhatsapp,
+                bookingType: bookingType || "personal", // Default if missing
+                venue: venue || null,
                 status: "PENDING",
             },
         })
+        console.log("[API] Booking created:", booking.id)
 
         // Call Supabase Edge Function (Telegram)
         if (supabase) {
@@ -56,8 +63,11 @@ export async function POST(request: Request) {
                     city,
                     state,
                     clientName,
+                    clientEmail,
                     cellphone,
                     hasWhatsapp,
+                    bookingType: bookingType || "personal",
+                    venue: venue || null,
                     bookingId: booking.id
                 }
             })
@@ -73,6 +83,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: true, booking })
     } catch (error) {
         console.error("Booking error:", error)
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+        return NextResponse.json({ error: "Internal Server Error", details: String(error) }, { status: 500 })
     }
 }

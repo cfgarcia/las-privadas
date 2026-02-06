@@ -21,7 +21,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
         <div className="min-h-screen bg-gray-50">
             <Header session={session} />
             <div className="py-12 px-4 sm:px-6 lg:px-8">
-                <ArtistDetailView artist={artist} />
+                <ArtistDetailView artist={artist} user={session?.user} />
             </div>
             {showLoginModal && <LoginModal />}
         </div>

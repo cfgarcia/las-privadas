@@ -1,36 +1,21 @@
+/* refined-calendar.css */
+
+/* Base Calendar Container */
 .react-calendar {
     width: 100%;
-    max-width: 400px;
-    background: #FDFBF7;
-    /* Cream */
-    border: 2px solid #5D4037;
-    /* Leather border */
-    border-radius: 4px;
+    background: transparent;
+    border: none;
     font-family: 'Playfair Display', serif;
-    line-height: 1.125em;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* Elegant Serif */
+    line-height: 1.25em;
+    padding: 1rem;
+    position: relative;
+    overflow: visible;
+    /* Allow popouts if needed */
 }
 
-.react-calendar--doubleView {
-    width: 700px;
-}
-
-.react-calendar--doubleView .react-calendar__viewContainer {
-    display: flex;
-    margin: -0.5em;
-}
-
-.react-calendar--doubleView .react-calendar__viewContainer>* {
-    width: 50%;
-    margin: 0.5em;
-}
-
-.react-calendar,
-.react-calendar *,
-.react-calendar *:before,
-.react-calendar *:after {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+.react-calendar * {
+    text-decoration: none;
     box-sizing: border-box;
 }
 
@@ -44,167 +29,204 @@
     cursor: pointer;
 }
 
+/* Navigation (Header) */
 .react-calendar__navigation {
     display: flex;
-    height: 44px;
-    margin-bottom: 1em;
+    height: 60px;
+    margin-bottom: 1rem;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .react-calendar__navigation button {
     min-width: 44px;
     background: none;
-    font-size: 16px;
-    font-weight: 600;
-    color: #374151;
+    font-family: 'Rye', serif;
+    font-size: 1.75rem;
+    /* Larger arrows */
+    color: #5D4037;
+    /* Leather */
+    transition: all 0.3s ease;
 }
 
-.react-calendar__navigation button:disabled {
-    background-color: #f3f4f6;
+.react-calendar__navigation__label {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    pointer-events: none;
 }
 
-.react-calendar__navigation button:enabled:hover,
-.react-calendar__navigation button:enabled:focus {
-    background-color: #f9fafb;
+.react-calendar__navigation button:enabled:hover {
+    color: #bfa15f;
+    /* Gold */
+    transform: scale(1.1);
 }
 
+/* Weekdays Header */
 .react-calendar__month-view__weekdays {
     text-align: center;
     text-transform: uppercase;
-    font-weight: bold;
-    font-size: 0.75em;
-    color: #9ca3af;
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: #8D6E63;
+    /* Light Leather */
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid rgba(93, 64, 55, 0.1);
+    padding-bottom: 12px;
 }
 
-.react-calendar__month-view__weekdays__weekday {
-    padding: 0.5em;
+.react-calendar__month-view__weekdays__weekday abbr {
+    text-decoration: none;
+    cursor: default;
 }
 
-.react-calendar__month-view__weekNumbers .react-calendar__tile {
+/* Days/Tiles */
+.react-calendar__tile {
+    max-width: 100%;
+    height: 56px;
+    /* Wider and Taller targets */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75em;
-    font-weight: bold;
-}
-
-.react-calendar__month-view__days__day--weekend {
-    color: #ef4444;
-}
-
-.react-calendar__month-view__days__day--neighboringMonth {
-    color: #d1d5db;
-}
-
-.react-calendar__year-view .react-calendar__tile,
-.react-calendar__decade-view .react-calendar__tile,
-.react-calendar__century-view .react-calendar__tile {
-    padding: 2em 0.5em;
-}
-
-.react-calendar__tile {
-    max-width: 100%;
-    padding: 10px 6.6667px;
     background: none;
-    text-align: center;
-    line-height: 16px;
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-.react-calendar__tile:disabled {
-    background-color: #f3f4f6;
-    color: #d1d5db;
-}
-
-.react-calendar__tile:enabled:hover,
-.react-calendar__tile:enabled:focus {
-    background-color: #F5F5DC;
-    /* Cream-dark */
+    font-size: 17px;
+    font-weight: 400;
     color: #5D4037;
-    /* Leather */
+    position: relative;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+    /* Soft square for base, star for hover */
 }
 
+/* Content wrapper */
+.react-calendar__tile abbr {
+    position: relative;
+    z-index: 10;
+}
+
+/* -------------------------------------------------------------------------- */
+/* SHERIFF STAR HOVER                                                         */
+/* -------------------------------------------------------------------------- */
+.react-calendar__tile:enabled:hover {
+    background-color: transparent;
+    color: #5D4037;
+    font-weight: 700;
+}
+
+.react-calendar__tile:enabled:hover::after {
+    content: '';
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    background-color: rgba(212, 175, 55, 0.6);
+    /* High opacity for visibility */
+
+    /* Sheriff Star Shape (6 points) */
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+
+    animation: spin-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 0;
+    /* Behind the text */
+}
+
+@keyframes spin-in {
+    0% {
+        transform: scale(0) rotate(-90deg);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* NOW (Today) */
 .react-calendar__tile--now {
-    background: #FDFBF7;
-    /* Cream */
-    color: #D4AF37;
-    /* Gold */
-    border: 1px solid #D4AF37;
+    background: transparent;
+    color: #bfa15f;
+    font-weight: 700;
 }
 
-.react-calendar__tile--now:enabled:hover,
-.react-calendar__tile--now:enabled:focus {
-    background: #F5F5DC;
+.react-calendar__tile--now::before {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background-color: #bfa15f;
+    border-radius: 50%;
 }
 
-.react-calendar__tile--hasActive {
-    background: #8D6E63;
-    /* Leather Light */
-}
-
-.react-calendar__tile--hasActive:enabled:hover,
-.react-calendar__tile--hasActive:enabled:focus {
-    background: #5D4037;
-    /* Leather */
-}
-
-.react-calendar__tile--active {
-    background: #5D4037;
-    /* Leather */
-    color: #FDFBF7;
-    /* Cream */
-    border: 2px solid #D4AF37;
-    /* Gold border */
-}
-
+/* Selected/Active Date */
+.react-calendar__tile--active,
 .react-calendar__tile--active:enabled:hover,
-.react-calendar__tile--active:enabled:focus {
-    background: #3E2723;
-    /* Leather Dark */
+.react-calendar__tile--hasActive {
+    background: transparent !important;
+    color: #FDFBF7 !important;
+    font-weight: 700;
+    box-shadow: none;
 }
 
-.react-calendar--selectRange .react-calendar__tile--hover {
-    background-color: #e0e7ff;
+/* Override the hover star for active items to be a solid star */
+.react-calendar__tile--active::after,
+.react-calendar__tile--active:enabled:hover::after {
+    content: '';
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    background-color: #5D4037;
+    /* Solid Leather */
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    animation: none;
+    opacity: 1;
+    z-index: 0;
 }
 
-/* Pending Date Style */
-.pending-date {
-    background-color: #fef08a !important;
-    /* Yellow-200 */
-    color: #854d0e !important;
-    /* Yellow-800 */
+/* Disabled */
+.react-calendar__tile:disabled {
+    background-color: transparent;
+    color: #E2DBD6;
+    cursor: default;
 }
 
-.pending-date:enabled:hover,
-.pending-date:enabled:focus {
-    background-color: #fde047 !important;
-    /* Yellow-300 */
+/* -------------------------------------------------------------------------- */
+/* STATUS COLORS (Re-added)                                                   */
+/* -------------------------------------------------------------------------- */
+
+/* Pending (1 Pending) - Yellow Dot */
+.pending-date::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 6px;
+    height: 6px;
+    background-color: #facc15;
+    border-radius: 50%;
 }
 
-/* Available Date Style (Green) */
-.available-date {
-    background-color: #bbf7d0 !important;
-    /* Green-200 */
-    color: #166534 !important;
-    /* Green-800 */
-}
-
-.available-date:enabled:hover,
-.available-date:enabled:focus {
-    background-color: #86efac !important;
-    /* Green-300 */
-}
-
-/* Confirmed Date Style (Red - High Demand) */
+/* Confirmed (Booked) - Red Strike / Faded */
 .confirmed-date {
-    background-color: #fecaca !important;
-    /* Red-200 */
-    color: #991b1b !important;
-    /* Red-800 */
+    color: #ef4444 !important;
+    /* Red Text */
+    text-decoration: line-through !important;
+    text-decoration-color: #ef4444 !important;
+    opacity: 0.6;
 }
 
-.confirmed-date:enabled:hover,
-.confirmed-date:enabled:focus {
-    background-color: #fca5a5 !important;
-    /* Red-300 */
+.confirmed-date:enabled:hover {
+    color: #b91c1c !important;
+    /* Darker Red on hover */
+}
+
+/* Remove star for confirmed dates if we want (or keep it red) */
+.confirmed-date:enabled:hover::after {
+    background-color: rgba(239, 68, 68, 0.1);
+    /* Red tint star */
 }
