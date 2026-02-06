@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma"
 import { updateBookingStatus, deleteBooking } from "../actions"
 
+export const dynamic = 'force-dynamic'
+
 export default async function BookingsPage() {
     const bookings = await prisma.booking.findMany({
         orderBy: { createdAt: "desc" },
@@ -21,8 +23,8 @@ export default async function BookingsPage() {
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2 mb-2">
                                         <span className={`px-2 py-1 text-xs font-bold rounded-full uppercase tracking-wide ${booking.status === "CONFIRMED" ? "bg-green-100 text-green-800" :
-                                                booking.status === "PENDING" ? "bg-yellow-100 text-yellow-800" :
-                                                    "bg-red-100 text-red-800"
+                                            booking.status === "PENDING" ? "bg-yellow-100 text-yellow-800" :
+                                                "bg-red-100 text-red-800"
                                             }`}>
                                             {booking.status}
                                         </span>
