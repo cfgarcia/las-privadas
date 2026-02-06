@@ -76,6 +76,7 @@ export default function AvailabilityCalendar({ artistId, onDateSelect }: Availab
                 prevLabel={<span className="text-xl text-leather font-western">‹</span>}
                 next2Label={null}
                 prev2Label={null}
+                showNeighboringMonth={false}
                 className="font-western text-leather-dark bg-transparent border-none w-full"
                 formatShortWeekday={(locale, date) => ['S', 'M', 'T', 'W', 'T', 'F', 'S'][date.getDay()]} // Single letter days
             />

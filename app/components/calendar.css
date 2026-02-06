@@ -110,26 +110,28 @@
 /* -------------------------------------------------------------------------- */
 /* SHERIFF STAR HOVER                                                         */
 /* -------------------------------------------------------------------------- */
-.react-calendar__tile:enabled:hover {
-    background-color: transparent;
-    color: #5D4037;
-    font-weight: 700;
-}
+@media (hover: hover) {
+    .react-calendar__tile:enabled:hover {
+        background-color: transparent;
+        color: #5D4037;
+        font-weight: 700;
+    }
 
-.react-calendar__tile:enabled:hover::after {
-    content: '';
-    position: absolute;
-    width: 48px;
-    height: 48px;
-    background-color: rgba(212, 175, 55, 0.6);
-    /* High opacity for visibility */
+    .react-calendar__tile:enabled:hover::after {
+        content: '';
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        background-color: rgba(212, 175, 55, 0.6);
+        /* High opacity for visibility */
 
-    /* Sheriff Star Shape (6 points) */
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        /* Sheriff Star Shape (6 points) */
+        clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
 
-    animation: spin-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 0;
-    /* Behind the text */
+        animation: spin-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 0;
+        /* Behind the text */
+    }
 }
 
 @keyframes spin-in {

@@ -64,11 +64,11 @@ export default function ArtistCarousel({ artists, initialSlide = 1 }: ArtistCaro
                     }
                 }}
                 coverflowEffect={{
-                    rotate: 30,
+                    rotate: 0, // No rotation on mobile for smoother feel
                     stretch: 0,
-                    depth: 100,
+                    depth: 50, // Less depth
                     modifier: 1,
-                    slideShadows: true,
+                    slideShadows: false, // Disable shadows on mobile for performance
                 }}
                 pagination={{ clickable: true }}
                 modules={[EffectCoverflow, Pagination]}
@@ -76,9 +76,19 @@ export default function ArtistCarousel({ artists, initialSlide = 1 }: ArtistCaro
                 breakpoints={{
                     640: {
                         slidesPerView: 'auto',
+                        coverflowEffect: {
+                            rotate: 20,
+                            depth: 80,
+                            slideShadows: true,
+                        }
                     },
                     1024: {
                         slidesPerView: 'auto',
+                        coverflowEffect: {
+                            rotate: 30,
+                            depth: 100,
+                            slideShadows: true,
+                        }
                     },
                 }}
             >

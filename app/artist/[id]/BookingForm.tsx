@@ -188,15 +188,15 @@ export default function BookingForm({ artistId, user }: { artistId: string, user
                 <div className="absolute inset-3 border border-gold/20 pointer-events-none rounded-[2px]"></div>
 
                 {/* Content */}
-                <div className="relative p-8 sm:p-12 z-10">
+                <div className="relative p-4 sm:p-12 z-10">
                     {/* Header - Hide on Success Step for cleaner look */}
                     {currentStep !== 4 && (
-                        <div className="text-center mb-10">
-                            <h3 className="text-4xl font-western text-leather-dark mb-2 drop-shadow-sm">{t.artist.book_title}</h3>
+                        <div className="text-center mb-6 sm:mb-10">
+                            <h3 className="text-3xl sm:text-4xl font-western text-leather-dark mb-2 drop-shadow-sm">{t.artist.book_title}</h3>
                             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto rounded-full opacity-50"></div>
-                            <p className="mt-3 text-leather/60 font-serif italic">
+                            <p className="mt-3 text-leather/60 font-serif italic text-sm sm:text-base">
                                 {date ? (
-                                    <span className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-leather/5 border border-leather/10 text-leather-dark text-sm">
+                                    <span className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-leather/5 border border-leather/10 text-leather-dark">
                                         <span className="w-1.5 h-1.5 rounded-full bg-gold"></span>
                                         {date}
                                     </span>
@@ -236,11 +236,11 @@ export default function BookingForm({ artistId, user }: { artistId: string, user
                                     <label className="block text-center text-sm font-bold uppercase text-leather/50 mb-4 tracking-[0.2em]">
                                         {t.booking.type_label}
                                     </label>
-                                    <div className="flex justify-center gap-4">
+                                    <div className="flex flex-col sm:flex-row justify-center gap-4">
                                         <button
                                             type="button"
                                             onClick={() => setBookingType('personal')}
-                                            className={`px-6 py-2 rounded-full border-2 transition-all font-serif italic text-lg
+                                            className={`px-6 py-3 sm:py-2 rounded-full border-2 transition-all font-serif italic text-base sm:text-lg h-auto whitespace-normal
                                                 ${bookingType === 'personal'
                                                     ? 'bg-leather text-gold border-leather shadow-md'
                                                     : 'bg-transparent text-leather/60 border-leather/20 hover:border-leather/40'}`}
@@ -250,7 +250,7 @@ export default function BookingForm({ artistId, user }: { artistId: string, user
                                         <button
                                             type="button"
                                             onClick={() => setBookingType('business')}
-                                            className={`px-6 py-2 rounded-full border-2 transition-all font-serif italic text-lg
+                                            className={`px-6 py-3 sm:py-2 rounded-full border-2 transition-all font-serif italic text-base sm:text-lg h-auto whitespace-normal
                                                 ${bookingType === 'business'
                                                     ? 'bg-leather text-gold border-leather shadow-md'
                                                     : 'bg-transparent text-leather/60 border-leather/20 hover:border-leather/40'}`}
@@ -264,18 +264,18 @@ export default function BookingForm({ artistId, user }: { artistId: string, user
                                     <label className="block text-center text-sm font-bold uppercase text-leather/50 mb-6 tracking-[0.2em]">
                                         {t.booking.hours_label}
                                     </label>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
                                         {[1, 2, 3, 4, 5].map((hour) => (
                                             <button
                                                 key={hour}
                                                 type="button"
                                                 onClick={() => setFormData(p => ({ ...p, hours: hour.toString() }))}
-                                                className={`py-4 px-2 border transition-all duration-300 relative overflow-hidden group
+                                                className={`py-3 sm:py-4 px-2 border transition-all duration-300 relative overflow-hidden group rounded-sm
                                                     ${formData.hours === hour.toString()
                                                         ? 'border-gold bg-leather text-gold shadow-md'
                                                         : 'border-leather/10 bg-white/50 text-leather hover:border-gold/30 hover:bg-white'}`}
                                             >
-                                                <span className="relative z-10 font-western text-xl">{hour} {hour === 5 ? '+' : ''} {hour === 1 ? 'Hora' : 'Horas'}</span>
+                                                <span className="relative z-10 font-western text-lg sm:text-xl">{hour} {hour === 5 ? '+' : ''} {hour === 1 ? 'Hora' : 'Horas'}</span>
                                                 {/* Shine effect */}
                                                 {formData.hours === hour.toString() && (
                                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] animate-[shimmer_2s_infinite]"></div>
