@@ -5,24 +5,36 @@ import { useLanguage } from "../context/LanguageContext"
 export default function LanguageSwitcher() {
     const { language, setLanguage } = useLanguage()
 
+    const baseStyle: React.CSSProperties = {
+        fontFamily: 'Playfair Display, serif',
+        fontWeight: 700,
+        fontSize: 11,
+        letterSpacing: '0.20em',
+        textTransform: 'uppercase',
+        background: 'transparent',
+        border: 'none',
+        cursor: 'pointer',
+        padding: 0,
+    }
+
     return (
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-3">
             <button
                 onClick={() => setLanguage("es")}
-                className={`px-2 py-1 rounded transition-colors ${language === "es"
-                        ? "bg-indigo-100 text-indigo-700 font-medium"
-                        : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-                    }`}
+                style={{
+                    ...baseStyle,
+                    color: language === "es" ? '#fcf6ba' : 'rgba(252,246,186,0.45)',
+                }}
             >
                 ES
             </button>
-            <span className="text-gray-300">|</span>
+            <span className="block w-px h-3 bg-[rgba(212,175,55,0.30)]" />
             <button
                 onClick={() => setLanguage("en")}
-                className={`px-2 py-1 rounded transition-colors ${language === "en"
-                        ? "bg-indigo-100 text-indigo-700 font-medium"
-                        : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-                    }`}
+                style={{
+                    ...baseStyle,
+                    color: language === "en" ? '#fcf6ba' : 'rgba(252,246,186,0.45)',
+                }}
             >
                 EN
             </button>

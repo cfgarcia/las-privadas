@@ -72,6 +72,19 @@ model Artist {
   bookingImageUrl String?
   availabilities Availability[]
   bookings    Booking[]
+  songs       Song[]
+}
+
+model Song {
+  id        String   @id @default(cuid())
+  artistId  String
+  artist    Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  title     String
+  mp3Url    String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([artistId, order])
 }
 
 model Availability {

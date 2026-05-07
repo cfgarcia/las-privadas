@@ -3,6 +3,15 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
+interface SongRow {
+    localId: string
+    dbId?: string
+    title: string
+    mp3Url: string
+    fileKey?: string // identifier for the file input (when a new file is staged)
+    removed?: boolean
+}
+
 interface ArtistFormProps {
     artist?: {
         id: string
@@ -12,12 +21,54 @@ interface ArtistFormProps {
         bookingImageUrl: string | null
         hoverVideoUrl: string | null
     }
+    songs?: Array<{ id: string; title: string; mp3Url: string | null }>
     action: (formData: FormData) => Promise<void>
 }
 
-export default function ArtistForm({ artist, action }: ArtistFormProps) {
+let songLocalCounter = 0
+const newLocalId = () => `s${Date.now().toString(36)}-${++songLocalCounter}`
+
+export default function ArtistForm({ artist, songs, action }: ArtistFormProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [songRows, setSongRows] = useState<SongRow[]>(() =>
+        (songs ?? []).map((s) => ({
+            localId: newLocalId(),
+            dbId: s.id,
+            title: s.title,
+            mp3Url: s.mp3Url ?? "",
+        })),
+    )
+
+    const updateSong = (localId: string, patch: Partial<SongRow>) => {
+        setSongRows((rows) => rows.map((r) => (r.localId === localId ? { ...r, ...patch } : r)))
+    }
+    const addSong = () => {
+        setSongRows((rows) => [...rows, { localId: newLocalId(), title: "", mp3Url: "" }])
+    }
+    const removeSong = (localId: string) => {
+        setSongRows((rows) =>
+            rows
+                .map((r) => (r.localId === localId ? { ...r, removed: true } : r))
+                .filter((r) => !(r.removed && !r.dbId)), // drop unsaved rows immediately
+        )
+    }
+    const moveSong = (localId: string, dir: -1 | 1) => {
+        setSongRows((rows) => {
+            const visible = rows.filter((r) => !r.removed)
+            const idx = visible.findIndex((r) => r.localId === localId)
+            const swapWith = visible[idx + dir]
+            if (!swapWith) return rows
+            // swap in the original array preserving any removed entries' positions
+            const a = rows.findIndex((r) => r.localId === localId)
+            const b = rows.findIndex((r) => r.localId === swapWith.localId)
+            const next = rows.slice()
+            ;[next[a], next[b]] = [next[b], next[a]]
+            return next
+        })
+    }
+
+    const visibleSongs = songRows.filter((r) => !r.removed)
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -27,9 +78,20 @@ export default function ArtistForm({ artist, action }: ArtistFormProps) {
             formData.append("id", artist.id)
         }
 
+        // Pack songs metadata. Order in the array = display order.
+        const songsMeta = songRows.map((r, idx) => ({
+            localId: r.localId,
+            dbId: r.dbId ?? null,
+            title: r.title.trim(),
+            mp3Url: r.mp3Url.trim(),
+            order: idx,
+            removed: !!r.removed,
+            hasNewFile: !!r.fileKey,
+        }))
+        formData.append("songsMeta", JSON.stringify(songsMeta))
+
         try {
             await action(formData)
-            // Redirect handled in server action or manually
         } catch (error) {
             console.error(error)
             if (error instanceof Error) {
@@ -229,6 +291,114 @@ export default function ArtistForm({ artist, action }: ArtistFormProps) {
                         />
                     </div>
                 </div>
+            </div>
+
+            <div className="border-t border-gray-200 pt-6">
+                <div className="flex items-center justify-between mb-3">
+                    <div>
+                        <h3 className="text-sm font-bold text-gray-700">Repertorio · Demos</h3>
+                        <p className="text-xs text-gray-500 mt-1">
+                            Las canciones aparecen como chips en la página del artista. Las que tengan MP3 se podrán reproducir en el demo.
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={addSong}
+                        className="bg-gold/10 text-gold-dark border border-gold/40 hover:bg-gold/20 px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider"
+                    >
+                        + Añadir canción
+                    </button>
+                </div>
+
+                {visibleSongs.length === 0 ? (
+                    <p className="text-xs text-gray-400 italic py-3">Aún no hay canciones. Pulsa &quot;Añadir canción&quot; para empezar.</p>
+                ) : (
+                    <div className="space-y-3">
+                        {visibleSongs.map((s, displayIdx) => (
+                            <div
+                                key={s.localId}
+                                className="border border-gray-200 rounded-md p-3 bg-gray-50/50 space-y-3"
+                            >
+                                <div className="flex items-start gap-2">
+                                    <div className="flex flex-col gap-1 pt-1">
+                                        <button
+                                            type="button"
+                                            onClick={() => moveSong(s.localId, -1)}
+                                            disabled={displayIdx === 0}
+                                            className="text-xs text-gray-500 hover:text-gold-dark disabled:opacity-30 disabled:cursor-not-allowed w-5 h-5"
+                                            aria-label="Subir"
+                                        >▲</button>
+                                        <button
+                                            type="button"
+                                            onClick={() => moveSong(s.localId, 1)}
+                                            disabled={displayIdx === visibleSongs.length - 1}
+                                            className="text-xs text-gray-500 hover:text-gold-dark disabled:opacity-30 disabled:cursor-not-allowed w-5 h-5"
+                                            aria-label="Bajar"
+                                        >▼</button>
+                                    </div>
+                                    <div className="flex-1">
+                                        <label className="block text-xs font-bold text-gray-600 mb-1">Título</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={s.title}
+                                            onChange={(e) => updateSong(s.localId, { title: e.target.value })}
+                                            placeholder="El Rey"
+                                            className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold"
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeSong(s.localId)}
+                                        className="mt-5 text-xs text-red-500 hover:text-red-700 underline"
+                                    >
+                                        Quitar
+                                    </button>
+                                </div>
+
+                                {s.mp3Url && !s.fileKey && (
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-xs text-gray-500 shrink-0">MP3 actual:</span>
+                                        <audio src={s.mp3Url} controls preload="none" className="h-7 flex-1 min-w-0" />
+                                    </div>
+                                )}
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div>
+                                        <label className="block text-xs text-gray-600 mb-1">Subir MP3 (GCS)</label>
+                                        <input
+                                            type="file"
+                                            name={`song-${s.localId}-mp3`}
+                                            accept="audio/mpeg,audio/mp3,audio/*"
+                                            onChange={(e) => {
+                                                const f = e.target.files?.[0]
+                                                updateSong(s.localId, { fileKey: f ? s.localId : undefined })
+                                            }}
+                                            className="block w-full text-xs text-gray-500
+                                                file:mr-3 file:py-1 file:px-2
+                                                file:rounded file:border-0
+                                                file:text-xs file:font-semibold
+                                                file:bg-gold file:text-white
+                                                hover:file:bg-gold-dark
+                                                cursor-pointer"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs text-gray-600 mb-1">o URL manual</label>
+                                        <input
+                                            type="text"
+                                            value={s.mp3Url}
+                                            onChange={(e) => updateSong(s.localId, { mp3Url: e.target.value })}
+                                            placeholder="https://…/track.mp3"
+                                            className="w-full border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold"
+                                        />
+                                    </div>
+                                </div>
+                                <p className="text-[10px] text-gray-400 italic">Si subes un archivo, reemplazará la URL manual al guardar.</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             <div className="flex justify-end gap-3">

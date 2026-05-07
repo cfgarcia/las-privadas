@@ -1,29 +1,76 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
-import Link from "next/link"
 import LoginModal from "../../components/LoginModal"
-import Header from "../../components/Header"
-import ArtistDetailView from "./ArtistDetailView"
+import ReservationClient from "../../components/reservation/ReservationClient"
+import type { ReservationArtist } from "../../components/reservation/types"
 
 export default async function ArtistPage({ params }: { params: Promise<{ id: string }> }) {
     const session = await auth()
     const showLoginModal = !session
     const { id } = await params
-    const artist = await prisma.artist.findUnique({
-        where: { id },
-    })
+
+    const [artist, others] = await Promise.all([
+        prisma.artist.findUnique({
+            where: { id },
+            include: {
+                songs: {
+                    orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+                },
+            },
+        }),
+        prisma.artist.findMany({
+            where: { id: { not: id } },
+            orderBy: { order: "asc" },
+            take: 3,
+        }),
+    ])
 
     if (!artist) {
-        return <div>Artist not found</div>
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#0a0503] text-[#fcf6ba]" style={{ fontFamily: 'Playfair Display, serif', fontStyle: 'italic' }}>
+                Artist not found
+            </div>
+        )
     }
 
+    const reservationArtist: ReservationArtist = {
+        ...mapArtist(artist),
+        songs: artist.songs.map((s) => ({
+            id: s.id,
+            title: s.title,
+            mp3Url: s.mp3Url,
+        })),
+    }
+    const similar: ReservationArtist[] = others.map(mapArtist)
+
     return (
-        <div className="min-h-screen bg-gray-50">
-            <Header session={session} />
-            <div className="py-12 px-4 sm:px-6 lg:px-8">
-                <ArtistDetailView artist={artist} user={session?.user} />
-            </div>
+        <>
+            <ReservationClient
+                artist={reservationArtist}
+                similar={similar}
+                user={session?.user ?? undefined}
+            />
             {showLoginModal && <LoginModal />}
-        </div>
+        </>
     )
+}
+
+type DbArtist = {
+    id: string
+    name: string
+    description: string
+    imageUrl: string | null
+    bookingImageUrl: string | null
+}
+
+function mapArtist(a: DbArtist): ReservationArtist {
+    return {
+        id: a.id,
+        name: a.name,
+        description: a.description,
+        imageUrl: a.imageUrl,
+        bookingImageUrl: a.bookingImageUrl,
+        genre: null,
+        city: null,
+    }
 }

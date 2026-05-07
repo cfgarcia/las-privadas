@@ -14,20 +14,42 @@ interface CarouselCardProps {
     isActive?: boolean
 }
 
+const CornerOrnament = ({ pos, active }: { pos: 'tl' | 'tr' | 'bl' | 'br'; active: boolean }) => {
+    const corner: Record<string, React.CSSProperties> = {
+        tl: { top: 4, left: 4, transform: 'rotate(0deg)' },
+        tr: { top: 4, right: 4, transform: 'rotate(90deg)' },
+        bl: { bottom: 4, left: 4, transform: 'rotate(-90deg)' },
+        br: { bottom: 4, right: 4, transform: 'rotate(180deg)' },
+    }
+    return (
+        <div
+            className="absolute pointer-events-none z-[3] transition-opacity duration-500"
+            style={{
+                width: 18,
+                height: 18,
+                opacity: active ? 0.95 : 0.5,
+                ...corner[pos],
+            }}
+        >
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M0 0 L18 0 L18 1 L1 1 L1 18 L0 18 Z" fill="#E8C77A" />
+                <path d="M2 2 L10 2 L10 2.5 L2.5 2.5 L2.5 10 L2 10 Z" fill="#C9A24A" opacity="0.7" />
+            </svg>
+        </div>
+    )
+}
+
 export default function CarouselCard({ artist, isActive = false }: CarouselCardProps) {
     const { t } = useLanguage()
     const videoRef = useRef<HTMLVideoElement>(null)
 
-    // Handle Mobile/Active State Playback
     useEffect(() => {
         if (!videoRef.current) return
-
         if (isActive) {
             const playPromise = videoRef.current.play()
             if (playPromise !== undefined) {
-                playPromise.catch((error) => {
-                    // Auto-play might be blocked by browser policy without user interaction first
-                    console.log("Auto-play prevented:", error)
+                playPromise.catch(() => {
+                    /* autoplay may be blocked */
                 })
             }
         } else {
@@ -37,13 +59,13 @@ export default function CarouselCard({ artist, isActive = false }: CarouselCardP
     }, [isActive])
 
     const handleMouseEnter = () => {
-        if (videoRef.current && !isActive) { // Only handle hover if not already active (desktop hover logic)
+        if (videoRef.current && !isActive) {
             videoRef.current.play().catch((e: any) => console.error("Video play error:", e))
         }
     }
 
     const handleMouseLeave = () => {
-        if (videoRef.current && !isActive) { // Only stop if not active
+        if (videoRef.current && !isActive) {
             videoRef.current.pause()
             videoRef.current.currentTime = 0
         }
@@ -51,110 +73,238 @@ export default function CarouselCard({ artist, isActive = false }: CarouselCardP
 
     return (
         <div
-            className={`block relative w-full h-[540px] transition-all duration-500 group z-20 cursor-pointer ${isActive ? 'scale-105' : 'scale-95 opacity-80 grayscale-[0.3]'}`}
+            className={`relative block cursor-pointer group z-20 transition-all duration-700 ease-out ${
+                isActive ? '' : 'brightness-[0.6]'
+            }`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            style={{ width: 380, height: 560, transformStyle: 'preserve-3d' }}
         >
+            {/* Pin-spot of warm gold light — only on active card. The lighting IS the indicator. */}
+            {isActive && (
+                <div
+                    className="absolute pointer-events-none z-0"
+                    style={{
+                        left: '50%',
+                        top: '-200px',
+                        transform: 'translateX(-50%)',
+                        width: 720,
+                        height: 460,
+                        background:
+                            'radial-gradient(ellipse at 50% 80%, rgba(232,199,122,0.32) 0%, rgba(232,199,122,0.10) 35%, transparent 65%)',
+                        filter: 'blur(6px)',
+                    }}
+                />
+            )}
 
-            {/* --- VINTAGE WOOD FRAME CONTAINER --- */}
-            {/* 
-                We use CSS gradients to create a realistic wood texture.
-                - Base: Dark Mahogany Brown
-                - Texture: Repeating lines for grain + Noise overlay
-            */}
+            {/* Outer dark-wood frame */}
             <div
-                className={`w-full h-full relative p-6 rounded-md shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden ${isActive ? 'shadow-[0_0_60px_rgba(0,0,0,0.8)]' : ''}`}
+                className="relative w-full h-full p-[14px] z-[1] rounded-[3px] overflow-hidden"
                 style={{
-                    backgroundColor: '#3E2723',
                     backgroundImage: `
-                        repeating-linear-gradient(
-                            45deg,
-                            rgba(255, 255, 255, 0.02) 0px,
-                            rgba(255, 255, 255, 0.02) 2px,
-                            transparent 2px,
-                            transparent 8px
-                        ),
-                        repeating-linear-gradient(
-                            -45deg,
-                            rgba(0, 0, 0, 0.1) 0px,
-                            rgba(0, 0, 0, 0.1) 2px,
-                            transparent 2px,
-                            transparent 4px
-                        ),
-                        linear-gradient(to bottom right, #3E2723, #271c19)
+                        repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 8px),
+                        repeating-linear-gradient(-45deg, rgba(0,0,0,0.10) 0 2px, transparent 2px 4px),
+                        linear-gradient(to bottom right, #3E2723, #1a0f0a)
                     `,
-                    boxShadow: `
-                        inset 0 0 20px rgba(0,0,0,0.8), /* Inner depth */
-                        inset 2px 2px 5px rgba(255,255,255,0.1), /* Top-left highlight */
-                        0 10px 20px rgba(0,0,0,0.5) /* Drop shadow */
-                    `
+                    boxShadow: isActive
+                        ? 'inset 0 0 28px rgba(0,0,0,0.85), inset 2px 2px 5px rgba(255,255,255,0.08), 0 30px 60px rgba(0,0,0,0.65), 0 0 0 1px rgba(212,175,55,0.35), 0 0 50px rgba(232,199,122,0.25)'
+                        : 'inset 0 0 22px rgba(0,0,0,0.85), inset 2px 2px 5px rgba(255,255,255,0.06), 0 16px 36px rgba(0,0,0,0.55)',
                 }}
             >
-                {/* Silver Inner Trim (The visual "matting" between wood and photo) */}
-                <div className="absolute inset-4 border-[3px] border-[#C0C0C0] rounded-sm shadow-[inset_0_0_10px_rgba(0,0,0,0.5)] z-10 pointer-events-none"></div>
+                {/* Gold corner ornaments */}
+                <CornerOrnament pos="tl" active={isActive} />
+                <CornerOrnament pos="tr" active={isActive} />
+                <CornerOrnament pos="bl" active={isActive} />
+                <CornerOrnament pos="br" active={isActive} />
 
-                {/* --- INNER CONTENT AREA --- */}
-                <div className="relative w-full h-full overflow-hidden bg-gray-900 shadow-inner rounded-sm">
+                {/* Gold inner trim — replaces silver matte */}
+                <div
+                    className="absolute pointer-events-none transition-colors duration-700"
+                    style={{
+                        inset: 8,
+                        border: `1px solid ${isActive ? 'rgba(232,199,122,0.55)' : 'rgba(212,175,55,0.28)'}`,
+                        boxShadow: 'inset 0 0 12px rgba(0,0,0,0.6)',
+                    }}
+                />
+                <div
+                    className="absolute pointer-events-none"
+                    style={{
+                        inset: 11,
+                        border: `1px solid ${isActive ? 'rgba(212,175,55,0.30)' : 'rgba(212,175,55,0.12)'}`,
+                    }}
+                />
 
-                    {/* Image Background */}
-                    <div className="absolute inset-0">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={artist.imageUrl || "https://via.placeholder.com/400x600"}
-                            alt={artist.name}
-                            className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500 scale-100 group-hover:scale-110 sepia-[.2]"
-                        />
+                {/* Photo + brass plaque + chevron CTA */}
+                <div className="relative w-full h-full overflow-hidden bg-[#1a0f0a]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={artist.imageUrl || "https://via.placeholder.com/400x600"}
+                        alt={artist.name}
+                        className="w-full h-full object-cover transition-[filter,transform] duration-1000 ease-out"
+                        style={{
+                            filter: isActive
+                                ? 'sepia(0.20) brightness(1.05) contrast(1.05)'
+                                : 'sepia(0.45) brightness(0.55) grayscale(0.15)',
+                            transform: isActive ? 'scale(1.04)' : 'scale(1)',
+                        }}
+                    />
 
-                        {/* Canvas Video Overlay */}
-                        {artist.hoverVideoUrl && (
-                            <div className={`absolute inset-0 transition-opacity duration-500 bg-black/5 z-0 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                                <video
-                                    ref={videoRef}
-                                    src={artist.hoverVideoUrl}
-                                    className="w-full h-full object-cover"
-                                    muted
-                                    loop
-                                    playsInline
-                                />
-                            </div>
-                        )}
-
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none"></div>
-                        {/* Old Photo Texture Overlay */}
-                        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/dust.png')] pointer-events-none"></div>
-                    </div>
-
-                    {/* "Select" Indicator (Now correctly positioned relative to main card) */}
-                    {isActive && (
-                        <div className="absolute top-4 right-4 bg-gradient-to-r from-red-900 to-red-700 text-[#fcf6ba] font-western border-2 border-[#d4af37] px-4 py-1 text-sm shadow-[0_4px_10px_rgba(0,0,0,0.6)] animate-fade-in rotate-2 z-50">
-                            Seleccionar
+                    {/* Hover/active video */}
+                    {artist.hoverVideoUrl && (
+                        <div
+                            className={`absolute inset-0 z-0 transition-opacity duration-500 bg-black/5 ${
+                                isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                            }`}
+                        >
+                            <video
+                                ref={videoRef}
+                                src={artist.hoverVideoUrl}
+                                className="w-full h-full object-cover"
+                                muted
+                                loop
+                                playsInline
+                            />
                         </div>
                     )}
 
-                    {/* Content Overlay */}
-                    <div className={`absolute bottom-0 left-0 w-full p-2 text-center transform transition-transform duration-500 ${isActive ? 'translate-y-0' : 'translate-y-4'}`}>
-                        <h3 className={`font-western text-[#fcf6ba] text-3xl mb-1 drop-shadow-[0_4px_4px_rgba(0,0,0,1)] ${isActive ? 'scale-110' : 'scale-100'} transition-transform duration-300 tracking-wide`}>
+                    {/* Dust grain */}
+                    <div
+                        className="absolute inset-0 pointer-events-none opacity-[0.18]"
+                        style={{
+                            backgroundImage: 'url(https://www.transparenttextures.com/patterns/dust.png)',
+                            mixBlendMode: 'overlay',
+                        }}
+                    />
+
+                    {/* Bottom gradient for plaque legibility */}
+                    <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                            background:
+                                'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 35%, transparent 60%)',
+                        }}
+                    />
+
+                    {/* Top vignette */}
+                    <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                            background:
+                                'radial-gradient(ellipse at 50% 0%, rgba(255,220,160,0.10) 0%, transparent 50%)',
+                        }}
+                    />
+
+                    {/* Brass plaque (bottom) */}
+                    <div
+                        className="absolute backdrop-blur-[2px]"
+                        style={{
+                            left: 16,
+                            right: 16,
+                            bottom: 16,
+                            padding: '14px 16px 12px',
+                            background: 'linear-gradient(to bottom, rgba(26,15,10,0.85), rgba(0,0,0,0.92))',
+                            border: '1px solid rgba(212,175,55,0.45)',
+                            borderTop: '1px solid rgba(232,199,122,0.65)',
+                            boxShadow: '0 6px 18px rgba(0,0,0,0.55), inset 0 1px 0 rgba(232,199,122,0.10)',
+                        }}
+                    >
+                        <div
+                            className="uppercase mb-1.5 transition-opacity duration-500"
+                            style={{
+                                fontFamily: 'Sancreek, cursive',
+                                fontSize: 9,
+                                letterSpacing: '0.30em',
+                                color: '#D4AF37',
+                                opacity: isActive ? 0.95 : 0.65,
+                            }}
+                        >
+                            Privada
+                        </div>
+                        <h3
+                            className="m-0 transition-[font-size] duration-500"
+                            style={{
+                                fontFamily: 'Rye, serif',
+                                fontSize: isActive ? 26 : 21,
+                                lineHeight: 1.1,
+                                letterSpacing: '0.04em',
+                                color: '#fcf6ba',
+                                textShadow: '0 2px 4px rgba(0,0,0,0.9)',
+                            }}
+                        >
                             {artist.name}
                         </h3>
 
-                        <div className={`space-y-2 overflow-hidden transition-all duration-500 ${isActive ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}>
-                            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent mx-auto mb-2"></div>
-                            {/* Description text added back for better context */}
-                            {isActive && (
-                                <p className="text-white/80 font-body text-xs line-clamp-2 italic mb-2 px-2 drop-shadow-md">
-                                    {artist.description}
-                                </p>
-                            )}
-
-                            <div className="inline-block mt-1 pb-1">
-                                <button className="bg-gradient-to-b from-[#b38728] to-[#5c4018] text-[#fcf6ba] font-display uppercase tracking-widest px-6 py-1.5 text-xs rounded-sm border border-[#fcf6ba]/50 hover:brightness-125 transition-all duration-300 shadow-[0_5px_15px_rgba(0,0,0,0.6)] transform hover:-translate-y-0.5 active:translate-y-0">
-                                    {t.home.view_details}
-                                </button>
-                            </div>
+                        {/* Divider + description (italic) — only when active */}
+                        <div
+                            className="overflow-hidden transition-[max-height,opacity] duration-500"
+                            style={{
+                                maxHeight: isActive ? 80 : 0,
+                                opacity: isActive ? 1 : 0,
+                            }}
+                        >
+                            <div
+                                className="my-2"
+                                style={{
+                                    width: 38,
+                                    height: 1,
+                                    background:
+                                        'linear-gradient(to right, transparent, rgba(232,199,122,0.7), transparent)',
+                                }}
+                            />
+                            <p
+                                className="m-0 italic line-clamp-2"
+                                style={{
+                                    fontFamily: 'Playfair Display, serif',
+                                    fontSize: 12,
+                                    lineHeight: 1.5,
+                                    color: 'rgba(252,246,186,0.7)',
+                                }}
+                            >
+                                {artist.description}
+                            </p>
                         </div>
                     </div>
+
+                    {/* Bronze chevron CTA — only on active. No rotated red flag. */}
+                    {isActive && (
+                        <div
+                            className="absolute flex items-center justify-center animate-fade-in"
+                            style={{
+                                top: 18,
+                                right: 18,
+                                width: 36,
+                                height: 36,
+                                borderRadius: '50%',
+                                background: 'linear-gradient(to bottom, #b38728, #5c4018)',
+                                border: '1px solid rgba(252,246,186,0.55)',
+                                boxShadow:
+                                    '0 4px 14px rgba(0,0,0,0.55), inset 0 1px 0 rgba(252,246,186,0.30)',
+                            }}
+                            title={t.home.view_details}
+                        >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fcf6ba" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M9 6l6 6-6 6" />
+                            </svg>
+                        </div>
+                    )}
                 </div>
             </div>
+
+            {/* Floor reflection — only active */}
+            {isActive && (
+                <div
+                    className="absolute pointer-events-none"
+                    style={{
+                        left: '8%',
+                        right: '8%',
+                        bottom: -22,
+                        height: 22,
+                        background:
+                            'radial-gradient(ellipse at 50% 0%, rgba(0,0,0,0.55) 0%, transparent 70%)',
+                        filter: 'blur(4px)',
+                    }}
+                />
+            )}
         </div>
     )
 }

@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         const body = await request.json()
         console.log("[API] Booking Request Body:", body)
 
-        const { artistId, date, hours, city, state, clientName, clientEmail, cellphone, hasWhatsapp, bookingType, venue } = body
+        const { artistId, date, hours, city, state, clientName, clientEmail, cellphone, hasWhatsapp, bookingType, venue, requests } = body
         // Simple validation
         if (!artistId || !date || !hours || !city || !state || !clientName || !cellphone) {
             console.error("[API] Missing fields:", { artistId, date, hours, city, state, clientName, cellphone })
@@ -68,6 +68,7 @@ export async function POST(request: Request) {
                     hasWhatsapp,
                     bookingType: bookingType || "personal",
                     venue: venue || null,
+                    requests: requests || null,
                     bookingId: booking.id
                 }
             })

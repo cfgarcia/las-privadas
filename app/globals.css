@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Rye&family=Sancreek&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Rye&family=Sancreek&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,20 +6,26 @@
 
 :root {
   --foreground-rgb: 62, 39, 35;
-  /* Very dark brown #3E2723 */
   --background-start-rgb: 253, 251, 247;
-  /* Warm Cream #FDFBF7 */
   --background-end-rgb: 245, 245, 220;
-  /* Beige #F5F5DC */
+
+  --leather-night: #1a0f0a;
+  --leather-mid: #2c1810;
+  --leather-dark: #3E2723;
+  --leather-deepest: #271c19;
+  --gold: #C9A24A;
+  --gold-light: #E8C77A;
+  --gold-dark: #8F6A1F;
+  --gold-pale: #F2E5B8;
+  --gold-deep: #6B4A12;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: #FDFBF7;
+  background: #1a0f0a;
   font-family: 'Playfair Display', serif;
-  /* Default to serif for elegance */
-  background-image: url("https://www.transparenttextures.com/patterns/paper.png");
-  /* Subtle texture if available, or just fallback */
 }
 
 h1,
@@ -38,76 +44,20 @@ h6 {
   }
 }
 
-@keyframes fly {
-  0% {
-    transform: translateY(20px);
-    opacity: 0;
+/* ─── Hero PNG shine (kept for legacy PNG hero option) ─────────────────── */
+@keyframes priv-shine {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 8px 24px rgba(0,0,0,0.6)) drop-shadow(0 0 30px rgba(212,175,55,0.15));
   }
-
-  20% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  100% {
-    transform: translateY(-40px);
-    opacity: 0;
-  }
-}
-
-.animate-fly {
-  animation: fly 2s infinite ease-in-out;
-}
-
-@keyframes sparkle {
-
-  0%,
-  100% {
-    opacity: 0;
-    transform: scale(0);
-  }
-
   50% {
-    opacity: 1;
-    transform: scale(1);
+    filter: brightness(1.18) drop-shadow(0 8px 24px rgba(0,0,0,0.6)) drop-shadow(0 0 36px rgba(232,199,122,0.45));
   }
-}
-
-.animate-sparkle {
-  animation: sparkle 2s infinite ease-in-out;
-}
-
-@keyframes wind {
-
-  0%,
-  100% {
-    transform: translateX(0) rotate(0deg);
-  }
-
-  25% {
-    transform: translateX(2px) rotate(1deg);
-  }
-
-  50% {
-    transform: translateX(-1px) rotate(-1deg);
-  }
-
-  75% {
-    transform: translateX(1px) rotate(0.5deg);
-  }
-}
-
-.animate-wind {
-  animation: wind 3s infinite ease-in-out;
 }
 
 @keyframes shine-pulse {
-
-  0%,
-  100% {
+  0%, 100% {
     filter: brightness(1) drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08));
   }
-
   50% {
     filter: brightness(1.2) drop-shadow(0 0 20px rgba(212, 175, 55, 0.6));
   }
@@ -115,4 +65,209 @@ h6 {
 
 .animate-shine-pulse {
   animation: shine-pulse 3s infinite ease-in-out;
+}
+
+/* ─── Animated typographic hero — gold shimmer + flourish underline ───── */
+/* Animate by exactly one tile width (background-size is 200% 100%) so the
+   pattern wraps seamlessly with no visible seam at the loop boundary. */
+@keyframes priv-gold-shimmer {
+  0%   { background-position: 200% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes priv-title-in {
+  from { opacity: 0; transform: translateY(14px); letter-spacing: 0.10em; }
+  to   { opacity: 1; transform: translateY(0);    letter-spacing: 0.04em; }
+}
+
+.priv-hero-animated .priv-hero-title {
+  animation:
+    priv-gold-shimmer 5.5s linear infinite,
+    priv-title-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes priv-flourish-draw {
+  from { stroke-dashoffset: 1400; opacity: 0.2; }
+  to   { stroke-dashoffset: 0;    opacity: 1; }
+}
+
+.priv-hero-flourish path:first-of-type {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: priv-flourish-draw 1600ms 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes priv-flourish-pulse {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%      { transform: scale(1.4); opacity: 0.85; }
+}
+
+.priv-hero-flourish path:last-of-type {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation:
+    priv-flourish-pulse 2.4s 2200ms ease-in-out infinite,
+    priv-fade-in 400ms 2100ms ease-out both;
+}
+
+@keyframes priv-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.priv-hero-sub {
+  opacity: 0;
+  animation: priv-fade-in 800ms 1400ms ease-out both;
+}
+
+/* ─── Backdrop ghost word — slow drift to feel "integrated" into bg ─────── */
+@keyframes priv-ghost-drift {
+  0%, 100% { transform: translate(-50%, -52%) scale(1);    }
+  50%      { transform: translate(-50%, -52%) scale(1.03); }
+}
+.priv-hero-ghost {
+  animation: priv-ghost-drift 9s ease-in-out infinite;
+}
+
+/* ─── Login plaque entrance — gentle rise + glow ramp ─────────────────── */
+@keyframes priv-plaque-in {
+  from { opacity: 0; transform: translateY(28px) scale(0.96); filter: blur(8px); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    filter: blur(0); }
+}
+.priv-plaque-in {
+  animation: priv-plaque-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Loading-screen animations ─────────────────────────────────────────── */
+@keyframes priv-loader-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes priv-loader-spin-rev {
+  to { transform: rotate(-360deg); }
+}
+@keyframes priv-loader-pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 16px rgba(232,199,122,0.35), inset 0 0 12px rgba(232,199,122,0.15);
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 30px rgba(232,199,122,0.6), inset 0 0 18px rgba(232,199,122,0.25);
+  }
+}
+@keyframes priv-loader-orbit {
+  from { transform: rotate(0deg)   translateY(-44px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateY(-44px) rotate(-360deg); }
+}
+@keyframes priv-loader-fade-up {
+  from { opacity: 0; transform: translateY(8px); letter-spacing: 0.30em; }
+  to   { opacity: 1; transform: translateY(0);   letter-spacing: 0.42em; }
+}
+@keyframes priv-loader-dots {
+  0%, 20%      { content: ''; }
+  40%          { content: '·'; }
+  60%          { content: '· ·'; }
+  80%, 100%    { content: '· · ·'; }
+}
+.priv-loader-dots::after {
+  content: '';
+  display: inline-block;
+  width: 2.5em;
+  text-align: left;
+  animation: priv-loader-dots 1.6s steps(1, end) infinite;
+}
+
+/* ─── Scroll-cue dot bounce ─────────────────────────────────────────────── */
+@keyframes priv-scroll-bounce {
+  0%   { transform: translate(-50%, 0);    opacity: 0;   }
+  30%  { opacity: 1; }
+  80%  { transform: translate(-50%, 14px); opacity: 0;   }
+  100% { transform: translate(-50%, 0);    opacity: 0;   }
+}
+.priv-scroll-dot {
+  animation: priv-scroll-bounce 1.8s ease-in-out infinite;
+}
+
+/* ─── Existing decorative animations (kept for other surfaces) ────────── */
+@keyframes fly {
+  0% { transform: translateY(20px); opacity: 0; }
+  20% { opacity: 1; transform: translateY(0); }
+  100% { transform: translateY(-40px); opacity: 0; }
+}
+.animate-fly { animation: fly 2s infinite ease-in-out; }
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+}
+.animate-sparkle { animation: sparkle 2s infinite ease-in-out; }
+
+@keyframes wind {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(2px) rotate(1deg); }
+  50% { transform: translateX(-1px) rotate(-1deg); }
+  75% { transform: translateX(1px) rotate(0.5deg); }
+}
+.animate-wind { animation: wind 3s infinite ease-in-out; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 400ms ease-out both;
+}
+
+/* ─── Reservation page tokens (from Las Privadas — Reservation.html) ────── */
+@keyframes priv-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.priv-fade-up { animation: priv-fade-up 900ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes priv-pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232,199,122,0.45), 0 0 18px rgba(232,199,122,0.30); }
+  50%      { box-shadow: 0 0 0 6px rgba(232,199,122,0),    0 0 30px rgba(232,199,122,0.55); }
+}
+
+@keyframes priv-vinyl-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.priv-stage::-webkit-scrollbar,
+.priv-scroll::-webkit-scrollbar { display: none; }
+.priv-stage,
+.priv-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+
+.priv-input {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+  background: rgba(10, 5, 3, 0.55);
+  border: 1px solid rgba(232,199,122,0.22);
+  color: #fcf6ba;
+  padding: 12px 14px;
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 200ms, box-shadow 200ms, background 200ms;
+  border-radius: 2px;
+}
+.priv-input,
+.priv-input * { box-sizing: border-box; }
+select.priv-input { appearance: none; -webkit-appearance: none; }
+.priv-input:focus {
+  border-color: rgba(232,199,122,0.65);
+  box-shadow: inset 0 0 0 1px rgba(232,199,122,0.35), 0 0 0 4px rgba(232,199,122,0.10);
+  background: rgba(10, 5, 3, 0.75);
+}
+.priv-input::placeholder {
+  color: rgba(252,246,186,0.35);
+  font-style: italic;
+}
+.priv-input::-webkit-calendar-picker-indicator {
+  filter: invert(75%) sepia(35%) saturate(450%) hue-rotate(5deg) brightness(95%);
+  cursor: pointer;
 }

@@ -5,10 +5,10 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Artist Booking App",
-  description: "Book local artists for your events",
+  title: "Las Privadas — Reserva tu Artista",
+  description: "Reservas íntimas con artistas regionales — curadas para tu noche.",
   icons: {
-    icon: '/logo.png', // Using the upload logo
+    icon: '/logo.png',
     shortcut: '/logo.png',
     apple: '/logo.png',
   },

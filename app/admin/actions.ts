@@ -19,6 +19,88 @@ const UpdateArtistSchema = CreateArtistSchema.extend({
     id: z.string().min(1, "ID is required"),
 })
 
+const SongMetaSchema = z.object({
+    localId: z.string(),
+    dbId: z.string().nullable().optional(),
+    title: z.string(),
+    mp3Url: z.string(),
+    order: z.number().int(),
+    removed: z.boolean(),
+    hasNewFile: z.boolean(),
+})
+const SongsMetaSchema = z.array(SongMetaSchema)
+
+type ResolvedSong = {
+    localId: string
+    dbId: string | null
+    title: string
+    mp3Url: string | null
+    order: number
+    removed: boolean
+}
+
+async function resolveSongsFromForm(formData: FormData): Promise<ResolvedSong[]> {
+    const raw = formData.get("songsMeta")
+    if (typeof raw !== "string" || !raw) return []
+    let parsed: z.infer<typeof SongsMetaSchema>
+    try {
+        parsed = SongsMetaSchema.parse(JSON.parse(raw))
+    } catch (err) {
+        console.error("Invalid songsMeta payload:", err)
+        throw new Error("Invalid songs payload")
+    }
+
+    const resolved: ResolvedSong[] = []
+    for (const s of parsed) {
+        let mp3Url: string | null = s.mp3Url.trim() ? s.mp3Url.trim() : null
+        if (s.hasNewFile && !s.removed) {
+            const file = formData.get(`song-${s.localId}-mp3`) as File | null
+            if (file && file.size > 0) {
+                mp3Url = await uploadToGCS(file, "audio")
+            }
+        }
+        resolved.push({
+            localId: s.localId,
+            dbId: s.dbId ?? null,
+            title: s.title.trim(),
+            mp3Url,
+            order: s.order,
+            removed: s.removed,
+        })
+    }
+    return resolved
+}
+
+async function persistSongsForArtist(artistId: string, songs: ResolvedSong[]) {
+    const ops: Array<Promise<unknown>> = []
+    for (const s of songs) {
+        if (s.removed) {
+            if (s.dbId) {
+                ops.push(prisma.song.delete({ where: { id: s.dbId } }))
+            }
+            continue
+        }
+        if (!s.title) continue // skip blanks
+        if (s.dbId) {
+            ops.push(
+                prisma.song.update({
+                    where: { id: s.dbId },
+                    data: { title: s.title, mp3Url: s.mp3Url, order: s.order },
+                }),
+            )
+        } else {
+            ops.push(
+                prisma.song.create({
+                    data: { artistId, title: s.title, mp3Url: s.mp3Url, order: s.order },
+                }),
+            )
+        }
+    }
+    if (ops.length) {
+        await Promise.all(ops)
+    }
+}
+
 async function checkAdmin() {
     const session = await auth()
     if (session?.user?.role !== "ADMIN") {
@@ -78,7 +160,9 @@ export async function createArtist(formData: FormData) {
         hoverVideoUrl = await uploadToGCS(hoverVideoFile, "videos")
     }
 
-    await prisma.artist.create({
+    const resolvedSongs = await resolveSongsFromForm(formData)
+
+    const created = await prisma.artist.create({
         data: {
             name,
             description,
@@ -87,6 +171,10 @@ export async function createArtist(formData: FormData) {
             hoverVideoUrl: hoverVideoUrl || null
         },
     })
+
+    if (resolvedSongs.length) {
+        await persistSongsForArtist(created.id, resolvedSongs)
+    }
 
     revalidatePath("/admin/artists") // Revalidate list
     revalidatePath("/") // Revalidate home
@@ -125,6 +213,8 @@ export async function updateArtist(formData: FormData) {
             hoverVideoUrl = await uploadToGCS(hoverVideoFile, "videos")
         }
 
+        const resolvedSongs = await resolveSongsFromForm(formData)
+
         await prisma.artist.update({
             where: { id },
             data: {
@@ -135,6 +225,8 @@ export async function updateArtist(formData: FormData) {
                 hoverVideoUrl: hoverVideoUrl || null
             },
         })
+
+        await persistSongsForArtist(id, resolvedSongs)
     } catch (error) {
         console.error("Server Action Error:", error)
         const errorMessage = error instanceof Error ? error.message : "Failed to update artist"
@@ -144,6 +236,7 @@ export async function updateArtist(formData: FormData) {
     revalidatePath("/admin/artists")
     revalidatePath("/")
     revalidatePath(`/artist/${id}`)
+    revalidatePath(`/admin/artists/${id}`)
 }
 
 export async function updateArtistOrder(items: { id: string; order: number }[]) {

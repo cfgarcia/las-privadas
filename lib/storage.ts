@@ -1,15 +1,22 @@
-import { Storage } from "@google-cloud/storage"
+import { Storage, type StorageOptions } from "@google-cloud/storage"
 
-// Initialize storage
-// It will automatically look for GOOGLE_APPLICATION_CREDENTIALS env var
-// OR use specific env vars (Best for Vercel)
-const storage = new Storage({
-    projectId: process.env.GCP_PROJECT_ID,
-    credentials: {
-        client_email: process.env.GCP_CLIENT_EMAIL,
-        private_key: process.env.GCP_PRIVATE_KEY?.replace(/\\n/g, '\n'), // handle Vercel env var formatting
+// Initialize storage. In production (Vercel) we pass explicit credentials via
+// env vars. In local dev we typically have GOOGLE_APPLICATION_CREDENTIALS
+// pointing at a service-account JSON file — let the SDK auto-detect that.
+const explicitClientEmail = process.env.GCP_CLIENT_EMAIL
+const explicitPrivateKey = process.env.GCP_PRIVATE_KEY
+
+const storageOptions: StorageOptions = {}
+if (process.env.GCP_PROJECT_ID) storageOptions.projectId = process.env.GCP_PROJECT_ID
+if (explicitClientEmail && explicitPrivateKey) {
+    storageOptions.credentials = {
+        client_email: explicitClientEmail,
+        private_key: explicitPrivateKey.replace(/\\n/g, '\n'),
     }
-})
+}
+// If neither explicit credentials nor projectId are provided, the SDK will
+// fall back to GOOGLE_APPLICATION_CREDENTIALS — which is the local dev path.
+const storage = new Storage(storageOptions)
 
 const bucketName = process.env.GCS_BUCKET_NAME || "artist-booking-app-assets"
 
