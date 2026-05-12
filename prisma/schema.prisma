@@ -12,18 +12,18 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -63,16 +63,22 @@ model VerificationToken {
 }
 
 model Artist {
-  id          String         @id @default(cuid())
-  name        String
-  description String
-  imageUrl    String?
-  hoverVideoUrl String? // Canvas-style video (MP4)
-  order       Int     @default(0)
+  id              String         @id @default(cuid())
+  name            String
+  description     String
+  imageUrl        String?
+  hoverVideoUrl   String? // Canvas-style video (MP4)
+  order           Int            @default(0)
   bookingImageUrl String?
-  availabilities Availability[]
-  bookings    Booking[]
-  songs       Song[]
+  availabilities  Availability[]
+  bookings        Booking[]
+  songs           Song[]
+
+  // Meta (Facebook + Instagram) integration for real-time DM webhook
+  metaPageId    String?       @unique // FB page_id (e.g. "560288020819289" for El As)
+  metaIgId      String?       @unique // IG ig_user_id (e.g. "17841447820142294")
+  metaPageToken String? // long-lived Page Access Token
+  metaInquiries MetaInquiry[]
 }
 
 model Song {
@@ -88,21 +94,21 @@ model Song {
 }
 
 model Availability {
-  id        String   @id @default(cuid())
-  date      DateTime
-  isAvailable Boolean @default(true)
-  artistId  String
-  artist    Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
-  
+  id          String   @id @default(cuid())
+  date        DateTime
+  isAvailable Boolean  @default(true)
+  artistId    String
+  artist      Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
   @@unique([artistId, date])
 }
 
 model Booking {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  artistId    String
-  artist      Artist   @relation(fields: [artistId], references: [id])
-  
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  artistId  String
+  artist    Artist   @relation(fields: [artistId], references: [id])
+
   // Booking Details
   date        DateTime
   hours       Int
@@ -111,11 +117,42 @@ model Booking {
   clientName  String
   clientEmail String?
   cellphone   String
-  hasWhatsapp Boolean @default(false)
-  
+  hasWhatsapp Boolean  @default(false)
+
   // New Fields
   bookingType String? @default("personal") // "personal" or "business"
   venue       String? // Venue name if business
 
-  status      String   @default("PENDING") // PENDING, CONFIRMED, REJECTED
+  status String @default("PENDING") // PENDING, CONFIRMED, REJECTED
+
+  metaInquiry MetaInquiry?
+}
+
+// A direct message received from Instagram or Facebook Messenger.
+// Created by /api/webhooks/meta and reviewed via /admin/inbox.
+model MetaInquiry {
+  id               String    @id @default(cuid())
+  platform         String // "messenger" | "instagram"
+  artistId         String?
+  artist           Artist?   @relation(fields: [artistId], references: [id])
+  pageId           String // FB page_id or IG ig_user_id that received the DM
+  conversationId   String? // optional thread ID for deeplink
+  senderPsid       String // PSID (FB) or IGSID (IG) — used for API replies
+  senderUsername   String?
+  senderName       String?
+  messageId        String    @unique // Meta's mid — idempotency key
+  messageText      String
+  receivedAt       DateTime
+  intent           String // "saludo" | "booking_general" | "booking_corrido" | "other"
+  intentStrength   String // "strong" | "weak"
+  status           String    @default("pending") // pending | replied_api | replied_manual | skipped | ignored
+  repliedAt        DateTime?
+  replyText        String?
+  createdBookingId String?   @unique
+  createdBooking   Booking?  @relation(fields: [createdBookingId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([status, receivedAt])
+  @@index([artistId, status, intent])
 }
