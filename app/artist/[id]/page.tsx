@@ -60,6 +60,8 @@ type DbArtist = {
     name: string
     tagline: string | null
     description: string
+    albumCount: number | null
+    careerYears: number | null
     imageUrl: string | null
     bookingImageUrl: string | null
 }
@@ -70,6 +72,8 @@ function mapArtist(a: DbArtist): ReservationArtist {
         name: a.name,
         tagline: a.tagline,
         description: a.description,
+        albumCount: a.albumCount,
+        careerYears: a.careerYears,
         imageUrl: a.imageUrl,
         bookingImageUrl: a.bookingImageUrl,
         genre: null,

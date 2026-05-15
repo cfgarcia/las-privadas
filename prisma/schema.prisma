@@ -67,6 +67,8 @@ model Artist {
   name            String
   tagline         String?
   description     String
+  albumCount      Int?
+  careerYears     Int?
   imageUrl        String?
   hoverVideoUrl   String? // Canvas-style video (MP4)
   order           Int            @default(0)

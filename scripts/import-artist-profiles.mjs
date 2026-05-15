@@ -205,6 +205,8 @@ async function applyPlan(prisma, plans) {
                     name: p.profile.name,
                     tagline: null,
                     description: p.profile.description,
+                    albumCount: null,
+                    careerYears: null,
                     imageUrl: null,
                     bookingImageUrl: null,
                     hoverVideoUrl: null,

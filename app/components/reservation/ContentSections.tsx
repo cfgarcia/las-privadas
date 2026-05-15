@@ -41,7 +41,6 @@ export function SectionHeading({ eyebrow, title }: { eyebrow: string; title: str
 }
 
 export function BioSection({ artist }: { artist: ReservationArtist }) {
-  const cityShort = artist.city ? artist.city.split(',')[0] : 'México'
   return (
     <section style={{ paddingBottom: 80 }}>
       <SectionHeading eyebrow="Quiénes son" title="La historia" />
@@ -61,9 +60,13 @@ export function BioSection({ artist }: { artist: ReservationArtist }) {
         borderTop: '1px solid rgba(232,199,122,0.15)',
         paddingTop: 24,
       }}>
-        <Stat n="120+" label="Privadas" />
-        <Stat n="9 años" label="Tocando juntos" />
-        <Stat n={cityShort} label="Sede" />
+        {artist.albumCount != null && (
+          <Stat n={String(artist.albumCount)} label="Discos" />
+        )}
+        {artist.careerYears != null && (
+          <Stat n={`${artist.careerYears} años`} label="De carrera" />
+        )}
+        <Stat n="Estados Unidos" label="Sede" />
       </div>
     </section>
   )

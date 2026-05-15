@@ -18,6 +18,8 @@ interface ArtistFormProps {
         name: string
         tagline: string | null
         description: string
+        albumCount: number | null
+        careerYears: number | null
         imageUrl: string | null
         bookingImageUrl: string | null
         hoverVideoUrl: string | null
@@ -147,6 +149,39 @@ export default function ArtistForm({ artist, songs, action }: ArtistFormProps) {
                     defaultValue={artist?.description}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gold focus:border-gold"
                 />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label htmlFor="albumCount" className="block text-sm font-bold text-gray-700">
+                        Álbumes / Discos
+                    </label>
+                    <input
+                        type="number"
+                        name="albumCount"
+                        id="albumCount"
+                        min={0}
+                        defaultValue={artist?.albumCount ?? ""}
+                        placeholder="30"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gold focus:border-gold"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">Stat del Hero (sección &ldquo;La historia&rdquo;).</p>
+                </div>
+                <div>
+                    <label htmlFor="careerYears" className="block text-sm font-bold text-gray-700">
+                        Años de carrera
+                    </label>
+                    <input
+                        type="number"
+                        name="careerYears"
+                        id="careerYears"
+                        min={0}
+                        defaultValue={artist?.careerYears ?? ""}
+                        placeholder="25"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gold focus:border-gold"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">Se muestra como &ldquo;{`{n}`} años&rdquo;.</p>
+                </div>
             </div>
 
             <div>

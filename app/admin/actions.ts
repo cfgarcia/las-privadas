@@ -11,6 +11,8 @@ const CreateArtistSchema = z.object({
     name: z.string().min(1, "Name is required"),
     tagline: z.string().optional().nullable(),
     description: z.string().min(1, "Description is required"),
+    albumCount: z.coerce.number().int().nonnegative().optional().nullable(),
+    careerYears: z.coerce.number().int().nonnegative().optional().nullable(),
     imageUrl: z.string().optional().nullable(),
     bookingImageUrl: z.string().optional().nullable(),
     hoverVideoUrl: z.string().optional().nullable(),
@@ -137,6 +139,8 @@ export async function createArtist(formData: FormData) {
         name: formData.get("name"),
         tagline: formData.get("tagline"),
         description: formData.get("description"),
+        albumCount: formData.get("albumCount") || null,
+        careerYears: formData.get("careerYears") || null,
         imageUrl: formData.get("imageUrl"),
         bookingImageUrl: formData.get("bookingImageUrl"),
         hoverVideoUrl: formData.get("hoverVideoUrl"),
@@ -145,7 +149,7 @@ export async function createArtist(formData: FormData) {
     // Validate string fields
     const validatedData = CreateArtistSchema.parse(rawData)
 
-    let { name, tagline, description, imageUrl, bookingImageUrl, hoverVideoUrl } = validatedData
+    let { name, tagline, description, albumCount, careerYears, imageUrl, bookingImageUrl, hoverVideoUrl } = validatedData
     const imageFile = formData.get("imageFile") as File | null
     const bookingImageFile = formData.get("bookingImageFile") as File | null
     const hoverVideoFile = formData.get("hoverVideoFile") as File | null
@@ -169,6 +173,8 @@ export async function createArtist(formData: FormData) {
             name,
             tagline: tagline?.trim() || null,
             description,
+            albumCount: albumCount ?? null,
+            careerYears: careerYears ?? null,
             imageUrl: imageUrl || null,
             bookingImageUrl: bookingImageUrl || null,
             hoverVideoUrl: hoverVideoUrl || null
@@ -191,6 +197,8 @@ export async function updateArtist(formData: FormData) {
         name: formData.get("name"),
         tagline: formData.get("tagline"),
         description: formData.get("description"),
+        albumCount: formData.get("albumCount") || null,
+        careerYears: formData.get("careerYears") || null,
         imageUrl: formData.get("imageUrl"),
         bookingImageUrl: formData.get("bookingImageUrl"),
         hoverVideoUrl: formData.get("hoverVideoUrl"),
@@ -199,7 +207,7 @@ export async function updateArtist(formData: FormData) {
     const validatedData = UpdateArtistSchema.parse(rawData)
 
     // eslint-disable-next-line prefer-const
-    let { id, name, tagline, description, imageUrl, bookingImageUrl, hoverVideoUrl } = validatedData
+    let { id, name, tagline, description, albumCount, careerYears, imageUrl, bookingImageUrl, hoverVideoUrl } = validatedData
     const imageFile = formData.get("imageFile") as File | null
     const bookingImageFile = formData.get("bookingImageFile") as File | null
     const hoverVideoFile = formData.get("hoverVideoFile") as File | null
@@ -225,6 +233,8 @@ export async function updateArtist(formData: FormData) {
                 name,
                 tagline: tagline?.trim() || null,
                 description,
+                albumCount: albumCount ?? null,
+                careerYears: careerYears ?? null,
                 imageUrl: imageUrl || null,
                 bookingImageUrl: bookingImageUrl || null,
                 hoverVideoUrl: hoverVideoUrl || null
