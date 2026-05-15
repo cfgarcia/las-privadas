@@ -1,6 +1,7 @@
 export type ReservationArtist = {
   id: string
   name: string
+  tagline: string | null
   description: string
   imageUrl: string | null
   bookingImageUrl: string | null

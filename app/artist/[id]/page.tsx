@@ -58,6 +58,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
 type DbArtist = {
     id: string
     name: string
+    tagline: string | null
     description: string
     imageUrl: string | null
     bookingImageUrl: string | null
@@ -67,6 +68,7 @@ function mapArtist(a: DbArtist): ReservationArtist {
     return {
         id: a.id,
         name: a.name,
+        tagline: a.tagline,
         description: a.description,
         imageUrl: a.imageUrl,
         bookingImageUrl: a.bookingImageUrl,
