@@ -205,32 +205,49 @@ export function AudioSection({ songs }: { songs?: ReservationSong[] }) {
         position: 'relative',
         overflow: 'hidden',
       }}>
-        <button
-          type="button"
-          onClick={togglePlay}
-          aria-label={playing ? 'Pausar' : 'Reproducir'}
-          style={{
-            position: 'relative',
-            width: 80, height: 80, borderRadius: '50%',
-            background: 'radial-gradient(circle at 30% 30%, #1a0e08 0%, #0a0503 70%)',
-            border: '2px solid rgba(232,199,122,0.55)',
-            cursor: 'pointer',
-            boxShadow: '0 0 22px rgba(232,199,122,0.30), inset 0 0 12px rgba(0,0,0,0.6)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#E8C77A', fontSize: 24, padding: 0,
-            animation: playing ? 'priv-vinyl-spin 6s linear infinite' : 'none',
-            flexShrink: 0,
-          }}
-        >
-          <span style={{ animation: playing ? 'priv-vinyl-spin 6s linear infinite reverse' : 'none' }}>
-            {playing ? '❚❚' : '▸'}
-          </span>
-          <span style={{
-            position: 'absolute', width: 14, height: 14, borderRadius: '50%',
-            background: '#E8C77A', boxShadow: '0 0 0 2px #0a0503, 0 0 0 3px rgba(232,199,122,0.45)',
-            top: 'calc(50% - 7px)', left: 'calc(50% - 7px)',
-          }} />
-        </button>
+        <div style={{ position: 'relative', flexShrink: 0, width: 80, height: 80 }}>
+          {!playing && (
+            <span
+              aria-hidden
+              style={{
+                position: 'absolute', inset: -4, borderRadius: '50%',
+                border: '2px solid rgba(232,199,122,0.55)',
+                animation: 'priv-vinyl-pulse 1.8s ease-out infinite',
+                pointerEvents: 'none',
+              }}
+            />
+          )}
+          <button
+            type="button"
+            onClick={togglePlay}
+            aria-label={playing ? 'Pausar' : 'Reproducir'}
+            style={{
+              position: 'relative',
+              width: 80, height: 80, borderRadius: '50%',
+              background: 'radial-gradient(circle at 30% 30%, #1a0e08 0%, #0a0503 70%)',
+              border: '2px solid rgba(232,199,122,0.55)',
+              cursor: 'pointer',
+              boxShadow: '0 0 22px rgba(232,199,122,0.30), inset 0 0 12px rgba(0,0,0,0.6)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#E8C77A', padding: 0,
+              animation: playing ? 'priv-vinyl-spin 6s linear infinite' : 'none',
+            }}
+          >
+            <span
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                animation: playing ? 'priv-vinyl-spin 6s linear infinite reverse' : 'none',
+              }}
+            >
+              {playing ? <EqBars /> : <PlayIcon />}
+            </span>
+            <span style={{
+              position: 'absolute', width: 14, height: 14, borderRadius: '50%',
+              background: '#E8C77A', boxShadow: '0 0 0 2px #0a0503, 0 0 0 3px rgba(232,199,122,0.45)',
+              top: 'calc(50% - 7px)', left: 'calc(50% - 7px)',
+            }} />
+          </button>
+        </div>
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{
@@ -343,6 +360,49 @@ function MockWaveform({ playing }: { playing: boolean }) {
           background: i < progress ? '#E8C77A' : 'rgba(232,199,122,0.30)',
           transition: 'background 200ms',
         }} />
+      ))}
+    </div>
+  )
+}
+
+function PlayIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <defs>
+        <linearGradient id="priv-play-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#f5e7b8" />
+          <stop offset="50%" stopColor="#d4af55" />
+          <stop offset="100%" stopColor="#8F6A1F" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M8 5.5v13a1 1 0 0 0 1.55.83l10-6.5a1 1 0 0 0 0-1.66l-10-6.5A1 1 0 0 0 8 5.5Z"
+        fill="url(#priv-play-grad)"
+      />
+    </svg>
+  )
+}
+
+function EqBars() {
+  const bars = [0, 0.18, 0.36]
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'flex-end', gap: 4,
+      height: 24, width: 26,
+    }}>
+      {bars.map((delay, i) => (
+        <span
+          key={i}
+          style={{
+            display: 'block',
+            width: 5,
+            height: 6,
+            background: 'linear-gradient(180deg, #f5e7b8 0%, #d4af55 60%, #8F6A1F 100%)',
+            borderRadius: 1,
+            animation: `priv-eq-bar 0.85s ease-in-out ${delay}s infinite`,
+            transformOrigin: 'bottom',
+          }}
+        />
       ))}
     </div>
   )
