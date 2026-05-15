@@ -194,13 +194,15 @@ function MobileHero({ artist, onOpenSheet, onWhatsApp }: {
           textShadow: '0 4px 18px rgba(0,0,0,0.65)',
         }}>{artist.name}</h1>
 
-        <p style={{
-          margin: '14px 0 24px',
-          fontFamily: 'Playfair Display, serif',
-          fontStyle: 'italic',
-          fontSize: 15, lineHeight: 1.5,
-          color: 'rgba(252,246,186,0.80)',
-        }}>{artist.description}</p>
+        {artist.tagline && (
+          <p style={{
+            margin: '14px 0 24px',
+            fontFamily: 'Playfair Display, serif',
+            fontStyle: 'italic',
+            fontSize: 15, lineHeight: 1.5,
+            color: 'rgba(252,246,186,0.80)',
+          }}>{artist.tagline}</p>
+        )}
 
         <button
           type="button"
