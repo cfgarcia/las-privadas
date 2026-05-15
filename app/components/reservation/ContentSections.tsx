@@ -54,10 +54,7 @@ export function BioSection({ artist }: { artist: ReservationArtist }) {
         fontStyle: 'italic',
         margin: 0,
       }}>
-        {artist.description} Tres voces que se conocen desde la prepa, requintos heredados,
-        y un repertorio que va de Javier Solís a Vicente — pero siempre con la pausa de la
-        sobremesa. Han tocado en bodas, sesentas, despedidas y noches que nadie recuerda
-        cómo terminaron.
+        {artist.description}
       </p>
       <div style={{
         display: 'flex', gap: 32, marginTop: 32,
