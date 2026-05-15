@@ -107,20 +107,22 @@ export default function ArtistHero({ artist, scrollY = 0, fallbackEyebrow }: Pro
           maxWidth: 880,
         }}>{artist.name}</h1>
 
-        <div style={{
-          marginTop: 22,
-          display: 'flex', alignItems: 'center', gap: 16,
-          maxWidth: 560,
-        }}>
-          <div style={{ height: 1, width: 36, background: '#E8C77A' }} />
-          <p style={{
-            margin: 0,
-            fontFamily: 'Playfair Display, serif',
-            fontStyle: 'italic',
-            fontSize: 18, lineHeight: 1.5,
-            color: 'rgba(252,246,186,0.85)',
-          }}>{artist.description}</p>
-        </div>
+        {artist.tagline && (
+          <div style={{
+            marginTop: 22,
+            display: 'flex', alignItems: 'center', gap: 16,
+            maxWidth: 560,
+          }}>
+            <div style={{ height: 1, width: 36, background: '#E8C77A' }} />
+            <p style={{
+              margin: 0,
+              fontFamily: 'Playfair Display, serif',
+              fontStyle: 'italic',
+              fontSize: 18, lineHeight: 1.5,
+              color: 'rgba(252,246,186,0.85)',
+            }}>{artist.tagline}</p>
+          </div>
+        )}
       </div>
 
       {/* Scroll cue */}
