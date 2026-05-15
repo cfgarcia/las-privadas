@@ -16,6 +16,7 @@ interface ArtistFormProps {
     artist?: {
         id: string
         name: string
+        tagline: string | null
         description: string
         imageUrl: string | null
         bookingImageUrl: string | null
@@ -116,6 +117,24 @@ export default function ArtistForm({ artist, songs, action }: ArtistFormProps) {
                     defaultValue={artist?.name}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gold focus:border-gold"
                 />
+            </div>
+
+            <div>
+                <label htmlFor="tagline" className="block text-sm font-bold text-gray-700">
+                    Tagline (Hero)
+                </label>
+                <input
+                    type="text"
+                    name="tagline"
+                    id="tagline"
+                    defaultValue={artist?.tagline ?? ""}
+                    placeholder="Patrón de Patrones · Pura Época Pesada · Ícono de los 90s"
+                    maxLength={140}
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gold focus:border-gold"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                    Una línea — apodo, frase pegadora. Si la dejas vacía, el hero solo muestra el nombre del artista.
+                </p>
             </div>
 
             <div>
