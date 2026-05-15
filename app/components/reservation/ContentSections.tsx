@@ -241,11 +241,6 @@ export function AudioSection({ songs }: { songs?: ReservationSong[] }) {
             >
               {playing ? <EqBars /> : <PlayIcon />}
             </span>
-            <span style={{
-              position: 'absolute', width: 14, height: 14, borderRadius: '50%',
-              background: '#E8C77A', boxShadow: '0 0 0 2px #0a0503, 0 0 0 3px rgba(232,199,122,0.45)',
-              top: 'calc(50% - 7px)', left: 'calc(50% - 7px)',
-            }} />
           </button>
         </div>
 
@@ -367,7 +362,7 @@ function MockWaveform({ playing }: { playing: boolean }) {
 
 function PlayIcon() {
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden style={{ filter: 'drop-shadow(0 0 8px rgba(232,199,122,0.45))' }}>
       <defs>
         <linearGradient id="priv-play-grad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#f5e7b8" />
