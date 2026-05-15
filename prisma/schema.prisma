@@ -65,6 +65,7 @@ model VerificationToken {
 model Artist {
   id              String         @id @default(cuid())
   name            String
+  tagline         String?
   description     String
   imageUrl        String?
   hoverVideoUrl   String? // Canvas-style video (MP4)
