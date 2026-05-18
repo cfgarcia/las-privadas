@@ -335,9 +335,7 @@ export default function LoginCard({
                     color: 'rgba(252,246,186,0.70)',
                 }}
             >
-                {isMember
-                    ? 'Bienvenido de vuelta. Inicia sesión para reservar tu próxima privada.'
-                    : 'Inicia sesión para reservar artistas regionales en privadas íntimas, hechas a tu medida.'}
+                Inicia sesión para reservar tu próxima privada.
             </p>
 
             {/* Brass Google button (wrapped in its own form so the action submits) */}

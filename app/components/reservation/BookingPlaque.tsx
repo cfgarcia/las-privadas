@@ -239,7 +239,7 @@ export default function BookingPlaque({ artist, onReserve, compact = false }: Pr
           <textarea
             className="priv-input"
             rows={3}
-            placeholder={`Canción favorita, dedicatoria, "El Rey" para mi papá…`}
+            placeholder={`Canción favorita, dedicatoria, "El rayo de Sinaloa" para mi compa…`}
             value={requests}
             onChange={(e) => setRequests(e.target.value)}
             style={{ resize: 'vertical', minHeight: 64 }}

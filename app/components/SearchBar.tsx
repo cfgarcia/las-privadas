@@ -78,7 +78,7 @@ export default function SearchBar({ query, onQuery, appear, resultCount }: Searc
                     onChange={(e) => onQuery(e.target.value)}
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
-                    placeholder="Busca por nombre o descripción…"
+                    placeholder="Busca un artista…"
                     className="flex-1 bg-transparent border-0 outline-none min-w-0"
                     style={{
                         fontFamily: 'Playfair Display, serif',

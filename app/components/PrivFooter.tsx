@@ -3,7 +3,7 @@
 const COLUMNS = [
     { label: 'Explorar', items: ['Artistas', 'Géneros', 'Ciudades'] },
     { label: 'La Casa', items: ['Quiénes somos', 'Para artistas', 'Prensa'] },
-    { label: 'Ayuda', items: ['Cómo reservar', 'Contacto', '+52 81 0000 0000'] },
+    { label: 'Ayuda', items: ['Cómo reservar', 'Contacto'] },
 ] as const
 
 export default function PrivFooter() {
@@ -86,7 +86,7 @@ export default function PrivFooter() {
                             color: muted,
                         }}
                     >
-                        Reservas íntimas con artistas regionales — curadas para tu noche.
+                        Reservas privadas con corridos, banda y norteño.
                     </p>
                 </div>
 

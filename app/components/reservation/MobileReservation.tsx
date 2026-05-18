@@ -538,7 +538,7 @@ function StepBody({ stepKey, data, update }: {
           <textarea
             className="priv-input"
             rows={4}
-            placeholder={`Canción favorita, dedicatoria, "El Rey" para mi papá…`}
+            placeholder={`Canción favorita, dedicatoria, "El rayo de Sinaloa" para mi compa…`}
             value={data.requests}
             onChange={(e) => update('requests', e.target.value)}
             style={{ fontSize: 17, padding: '16px 16px', resize: 'vertical', minHeight: 120 }}

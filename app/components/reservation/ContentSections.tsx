@@ -4,9 +4,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ReservationArtist, ReservationSong } from './types'
 
 const FALLBACK_SETLIST: ReservationSong[] = [
-  'El Rey', 'La Media Vuelta', 'Sabor a Mí', 'Bésame Mucho',
-  'Un Mundo Raro', 'Ella', 'Si Nos Dejan', 'Solamente Una Vez',
-  'Cien Años', 'La Diferencia', 'Por Tu Maldito Amor', 'Que Te Vaya Bonito',
+  'Catarino y los Rurales', 'El Helicóptero Negro', 'El Muchacho Alegre',
+  'La Botella', 'Plebes Atrevidos', 'El Centenario',
+  'Chivo Tatemado', 'Entre Perico y Perico', 'Patrón de Patrones',
+  'Soy de la Sierra', 'El Cachas de Oro', 'La Fuga del Chapo',
 ].map((t, i) => ({ id: `fallback-${i}`, title: t, mp3Url: null }))
 
 export function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
@@ -106,7 +107,7 @@ export function SetlistSection({ songs }: { songs?: ReservationSong[] }) {
       <p style={{
         margin: '0 0 28px', fontStyle: 'italic',
         color: 'rgba(252,246,186,0.65)', fontSize: 15,
-      }}>Toca cualquier canción para añadirla a tu lista — la guardamos en tu reserva.</p>
+      }}>Toca cualquier canción para pedirla. La guardamos en tu reserva.</p>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, maxWidth: 640 }}>
         {list.map((s) => {
@@ -265,7 +266,7 @@ export function AudioSection({ songs }: { songs?: ReservationSong[] }) {
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
           }}>
-            {current ? current.title : 'Sabor a Mí — vivo en Saltillo'}
+            {current ? current.title : 'Catarino y los Rurales · en vivo'}
           </div>
           {hasReal
             ? <RealWaveform progress={progress} />

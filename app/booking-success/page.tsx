@@ -61,10 +61,9 @@ export default function BookingSuccessPage() {
                         {t?.booking?.success_message || "Hemos recibido tu solicitud. Nos pondremos en contacto contigo muy pronto para confirmar los detalles."}
                     </p>
 
-                    <Link href="/artist/1" className="inline-block group">
-                        {/* Note: Ideally this links back to home or relevant artist, hardcoded temporarily or use history back */}
+                    <Link href="/" className="inline-block group">
                         <button className="px-10 py-4 bg-transparent border-2 border-leather/20 text-leather-dark font-serif text-lg uppercase tracking-widest hover:bg-leather hover:text-gold hover:border-leather transition-all duration-300 transform hover:-translate-y-1 rounded-sm">
-                            {t?.common?.back || "Volver al Inicio"}
+                            {t?.common?.back || "Volver al inicio"}
                         </button>
                     </Link>
                 </motion.div>

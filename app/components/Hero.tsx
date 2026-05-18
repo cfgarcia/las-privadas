@@ -14,7 +14,7 @@ export default function Hero() {
                 }}
             >
                 <span className="block h-px" style={{ flex: '0 0 80px', background: 'rgba(212,175,55,0.45)' }} />
-                <span>Privada · Catálogo Vol. III</span>
+                <span>Privada · 2026</span>
                 <span className="block h-px" style={{ flex: '0 0 80px', background: 'rgba(212,175,55,0.45)' }} />
             </div>
 
@@ -104,7 +104,7 @@ export default function Hero() {
                         color: 'rgba(252,246,186,0.65)',
                     }}
                 >
-                    Una selección curada de corridistas, banda y norteño para tu próxima privada.
+                    Corridos, banda y norteño para tu próxima privada.
                 </p>
             </div>
         </div>

@@ -24,9 +24,9 @@ export default function Error({
                 <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-gold pointer-events-none"></div>
                 <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-gold pointer-events-none"></div>
 
-                <h2 className="text-3xl font-western text-leather-dark mb-4">Something went wrong!</h2>
+                <h2 className="text-3xl font-western text-leather-dark mb-4">Algo no jaló.</h2>
                 <p className="text-leather mb-6 font-body">
-                    We encountered an unexpected error. Don't worry, we're working on fixing it.
+                    Tuvimos un problema. Intenta otra vez o regresa al catálogo.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -34,13 +34,13 @@ export default function Error({
                         onClick={() => reset()}
                         className="px-6 py-2 bg-leather-dark text-gold border border-gold hover:bg-leather transition-colors font-western tracking-wider uppercase text-sm"
                     >
-                        Try Again
+                        Intentar otra vez
                     </button>
                     <Link
                         href="/"
                         className="px-6 py-2 border border-leather-light text-leather-dark hover:bg-leather-light/10 transition-colors font-western tracking-wider uppercase text-sm flex items-center justify-center"
                     >
-                        Return Home
+                        Volver al catálogo
                     </Link>
                 </div>
             </div>
