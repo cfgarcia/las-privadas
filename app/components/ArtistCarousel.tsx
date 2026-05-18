@@ -117,7 +117,7 @@ export default function ArtistCarousel({
                             marginBottom: 8,
                         }}
                     >
-                        No hay coincidencias
+                        Más artistas próximamente
                     </div>
                     <p
                         className="m-0 italic"
@@ -128,26 +128,8 @@ export default function ArtistCarousel({
                             lineHeight: 1.55,
                         }}
                     >
-                        Intenta con otro nombre o descripción.
+                        Estamos sumando nuevos nombres al catálogo. Vuelve a buscar pronto.
                     </p>
-                    <button
-                        onClick={() => setQuery('')}
-                        className="cursor-pointer uppercase"
-                        style={{
-                            marginTop: 20,
-                            fontFamily: 'Rye, serif',
-                            fontSize: 11,
-                            letterSpacing: '0.22em',
-                            color: '#fcf6ba',
-                            background: 'linear-gradient(to bottom, #b38728, #5c4018)',
-                            border: '1px solid rgba(252,246,186,0.55)',
-                            borderRadius: 2,
-                            padding: '10px 22px',
-                            boxShadow: '0 5px 15px rgba(0,0,0,0.5)',
-                        }}
-                    >
-                        Ver todos
-                    </button>
                 </div>
             )}
 
