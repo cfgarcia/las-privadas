@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 interface SearchBarProps {
     query: string
@@ -11,7 +11,21 @@ interface SearchBarProps {
 
 export default function SearchBar({ query, onQuery, appear, resultCount }: SearchBarProps) {
     const [focused, setFocused] = useState(false)
+    const inputRef = useRef<HTMLInputElement>(null)
     const visible = appear > 0.02
+
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => {
+            const isModK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'
+            if (isModK) {
+                e.preventDefault()
+                inputRef.current?.focus()
+                inputRef.current?.select()
+            }
+        }
+        window.addEventListener('keydown', handler)
+        return () => window.removeEventListener('keydown', handler)
+    }, [])
 
     return (
         <div
@@ -58,7 +72,8 @@ export default function SearchBar({ query, onQuery, appear, resultCount }: Searc
                     <path d="m20 20-3.5-3.5" />
                 </svg>
                 <input
-                    type="search"
+                    ref={inputRef}
+                    type="text"
                     value={query}
                     onChange={(e) => onQuery(e.target.value)}
                     onFocus={() => setFocused(true)}
