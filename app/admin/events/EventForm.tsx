@@ -16,6 +16,7 @@ interface EventFormProps {
         ticketUrl: string
         flyerUrl: string | null
         isPublished: boolean
+        isSoldOut: boolean
     }
     action: (formData: FormData) => Promise<void>
 }
@@ -220,6 +221,18 @@ export default function EventForm({ artists, event, action }: EventFormProps) {
                 />
                 <label htmlFor="isPublished" className="text-sm font-bold text-gray-700">Publicado</label>
                 <span className="text-xs text-gray-400">(desmárcalo para prepararlo sin que se vea todavía)</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+                <input
+                    type="checkbox"
+                    name="isSoldOut"
+                    id="isSoldOut"
+                    defaultChecked={event?.isSoldOut ?? false}
+                    className="h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                />
+                <label htmlFor="isSoldOut" className="text-sm font-bold text-gray-700">Agotado (Sold Out)</label>
+                <span className="text-xs text-gray-400">(el evento se sigue viendo, pero con sello AGOTADO y botón deshabilitado)</span>
             </div>
 
             <div className="flex justify-end gap-3">

@@ -96,15 +96,20 @@ export default async function ArtistEventsPage({ params }: PageProps) {
                         {artist.events.map((event) => (
                             <li
                                 key={event.id}
-                                className="rounded-xl overflow-hidden border border-gold/30 bg-leather-dark/40"
+                                className="relative rounded-xl overflow-hidden border border-gold/30 bg-leather-dark/40"
                             >
+                                {event.isSoldOut && (
+                                    <span className="absolute top-3 -right-9 z-10 rotate-45 bg-red-700 text-white text-xs font-bold tracking-[0.25em] uppercase px-10 py-1.5 shadow-lg shadow-black/50">
+                                        Agotado
+                                    </span>
+                                )}
                                 {event.flyerUrl && (
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img
                                         src={event.flyerUrl}
                                         alt={`Flyer: ${event.title || event.venue}`}
                                         loading="lazy"
-                                        className="w-full h-auto"
+                                        className={`w-full h-auto ${event.isSoldOut ? "opacity-60 saturate-50" : ""}`}
                                     />
                                 )}
                                 <div className="p-5">
@@ -118,12 +123,21 @@ export default async function ArtistEventsPage({ params }: PageProps) {
                                         {event.venue} · {event.city}
                                         {event.state ? `, ${event.state}` : ""}
                                     </p>
-                                    <a
-                                        href={`/go/${event.id}`}
-                                        className="block w-full mt-4 bg-gold hover:bg-gold-dark active:bg-gold-dark text-[#0a0503] text-center font-bold tracking-[0.2em] uppercase py-3.5 rounded-lg transition-colors"
-                                    >
-                                        Boletos
-                                    </a>
+                                    {event.isSoldOut ? (
+                                        <div
+                                            aria-disabled="true"
+                                            className="block w-full mt-4 bg-cream/10 text-cream/40 border border-cream/15 text-center font-bold tracking-[0.2em] uppercase py-3.5 rounded-lg cursor-not-allowed select-none"
+                                        >
+                                            Boletos Agotados
+                                        </div>
+                                    ) : (
+                                        <a
+                                            href={`/go/${event.id}`}
+                                            className="block w-full mt-4 bg-gold hover:bg-gold-dark active:bg-gold-dark text-[#0a0503] text-center font-bold tracking-[0.2em] uppercase py-3.5 rounded-lg transition-colors"
+                                        >
+                                            Boletos
+                                        </a>
+                                    )}
                                 </div>
                             </li>
                         ))}

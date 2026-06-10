@@ -296,6 +296,7 @@ const EventSchema = z.object({
         .refine((u) => /^https?:\/\//.test(u), "La URL debe empezar con http(s)"),
     flyerUrl: z.string().optional().nullable(),
     isPublished: z.coerce.boolean(),
+    isSoldOut: z.coerce.boolean(),
 })
 
 const UpdateEventSchema = EventSchema.extend({
@@ -313,6 +314,7 @@ function eventRawData(formData: FormData) {
         ticketUrl: formData.get("ticketUrl"),
         flyerUrl: formData.get("flyerUrl"),
         isPublished: formData.get("isPublished") === "on",
+        isSoldOut: formData.get("isSoldOut") === "on",
     }
 }
 
@@ -349,6 +351,7 @@ export async function createEvent(formData: FormData) {
             ticketUrl: validated.ticketUrl,
             flyerUrl,
             isPublished: validated.isPublished,
+            isSoldOut: validated.isSoldOut,
         },
     })
 
@@ -373,6 +376,7 @@ export async function updateEvent(formData: FormData) {
             ticketUrl: validated.ticketUrl,
             flyerUrl,
             isPublished: validated.isPublished,
+            isSoldOut: validated.isSoldOut,
         },
     })
 

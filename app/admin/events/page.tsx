@@ -33,6 +33,11 @@ function EventRow({ event, isPast }: { event: EventWithArtist; isPast: boolean }
                                     Borrador
                                 </span>
                             )}
+                            {event.isSoldOut && (
+                                <span className="px-2 py-0.5 text-xs font-bold rounded-full uppercase tracking-wide bg-red-600 text-white">
+                                    Agotado
+                                </span>
+                            )}
                             {isPast && (
                                 <span className="px-2 py-0.5 text-xs font-bold rounded-full uppercase tracking-wide bg-red-100 text-red-700">
                                     Pasado

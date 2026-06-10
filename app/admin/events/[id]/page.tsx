@@ -33,6 +33,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
                     ticketUrl: event.ticketUrl,
                     flyerUrl: event.flyerUrl,
                     isPublished: event.isPublished,
+                    isSoldOut: event.isSoldOut,
                 }}
                 action={updateEvent}
             />

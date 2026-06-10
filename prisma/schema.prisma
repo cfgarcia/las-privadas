@@ -114,6 +114,7 @@ model Event {
   flyerUrl    String?
   clickCount  Int      @default(0)
   isPublished Boolean  @default(true)
+  isSoldOut   Boolean  @default(false) // keeps the card visible, disables Boletos
   createdAt   DateTime @default(now())
 
   @@index([artistId, date])
