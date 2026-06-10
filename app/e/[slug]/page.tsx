@@ -96,22 +96,32 @@ export default async function ArtistEventsPage({ params }: PageProps) {
                         {artist.events.map((event) => (
                             <li
                                 key={event.id}
-                                className="relative rounded-xl overflow-hidden border border-gold/30 bg-leather-dark/40"
+                                className="rounded-xl overflow-hidden border border-gold/30 bg-leather-dark/40"
                             >
-                                {event.isSoldOut && (
-                                    <span className="absolute top-3 -right-9 z-10 rotate-45 bg-red-700 text-white text-xs font-bold tracking-[0.25em] uppercase px-10 py-1.5 shadow-lg shadow-black/50">
-                                        Agotado
-                                    </span>
-                                )}
-                                {event.flyerUrl && (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img
-                                        src={event.flyerUrl}
-                                        alt={`Flyer: ${event.title || event.venue}`}
-                                        loading="lazy"
-                                        className={`w-full h-auto ${event.isSoldOut ? "opacity-60 saturate-50" : ""}`}
-                                    />
-                                )}
+                                <div className="relative aspect-video overflow-hidden">
+                                    {event.flyerUrl ? (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            src={event.flyerUrl}
+                                            alt={`Flyer: ${event.title || event.venue}`}
+                                            loading="lazy"
+                                            className={`absolute inset-0 h-full w-full object-cover object-center ${event.isSoldOut ? "opacity-40 saturate-50" : ""}`}
+                                        />
+                                    ) : (
+                                        <div className="absolute inset-0 bg-gradient-to-b from-leather-dark to-[#0a0503] flex items-center justify-center">
+                                            <span className={`font-western text-2xl tracking-wide text-center px-4 ${event.isSoldOut ? "text-gold/40" : "text-gold/80"}`}>
+                                                {event.venue}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {event.isSoldOut && (
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <span className="-rotate-12 border-4 border-red-600 text-red-500 bg-black/60 rounded-md px-6 py-2 text-3xl font-extrabold tracking-[0.3em] uppercase shadow-2xl shadow-black">
+                                                Agotado
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="p-5">
                                     <p className="text-gold text-sm font-semibold tracking-wide mb-1">
                                         {eventDateLabel(event.date)}

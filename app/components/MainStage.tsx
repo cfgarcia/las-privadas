@@ -161,10 +161,10 @@ export default function MainStage({ artists, initialSlide, session }: MainStageP
 
             {/* HERO STAGE */}
             <section
-                className="relative z-[2] flex flex-col items-center justify-center"
+                className="relative z-[2] flex flex-col items-center"
                 style={{
-                    height: 'min(560px, 64vh)',
-                    padding: '0 24px',
+                    minHeight: 'min(620px, 72vh)',
+                    padding: '24px 24px 28px',
                     opacity: heroOpacity,
                     transform: `translateY(${heroTranslate}px) scale(${heroScale})`,
                     filter: `blur(${heroBlur}px)`,
@@ -172,15 +172,15 @@ export default function MainStage({ artists, initialSlide, session }: MainStageP
                     willChange: 'transform, opacity, filter',
                 }}
             >
-                <Hero />
+                <div className="flex-1 flex items-center justify-center w-full">
+                    <Hero />
+                </div>
 
                 {/* Scroll-down cue */}
                 <div
-                    className="absolute flex flex-col items-center pointer-events-none"
+                    className="flex flex-col items-center pointer-events-none"
                     style={{
-                        bottom: 36,
-                        left: '50%',
-                        transform: 'translateX(-50%)',
+                        marginTop: 32,
                         gap: 10,
                         opacity: cueOpacity,
                         transition: 'opacity 200ms',
