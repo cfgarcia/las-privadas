@@ -1,14 +1,23 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
+import { Prisma } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 import { auth } from "@/lib/auth"
 import { uploadToGCS } from "@/lib/storage"
 import { z } from "zod"
 
+function isUniqueViolation(error: unknown): boolean {
+    return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002"
+}
+
 // Validation Schemas
 const CreateArtistSchema = z.object({
     name: z.string().min(1, "Name is required"),
+    slug: z
+        .string()
+        .regex(/^[a-z0-9-]+$/, "Slug: solo minúsculas, números y guiones")
+        .nullable(),
     tagline: z.string().optional().nullable(),
     description: z.string().min(1, "Description is required"),
     albumCount: z.coerce.number().int().nonnegative().optional().nullable(),
@@ -137,6 +146,7 @@ export async function createArtist(formData: FormData) {
 
     const rawData = {
         name: formData.get("name"),
+        slug: String(formData.get("slug") ?? "").trim() || null,
         tagline: formData.get("tagline"),
         description: formData.get("description"),
         albumCount: formData.get("albumCount") || null,
@@ -149,7 +159,8 @@ export async function createArtist(formData: FormData) {
     // Validate string fields
     const validatedData = CreateArtistSchema.parse(rawData)
 
-    let { name, tagline, description, albumCount, careerYears, imageUrl, bookingImageUrl, hoverVideoUrl } = validatedData
+    const { name, slug, tagline, description, albumCount, careerYears } = validatedData
+    let { imageUrl, bookingImageUrl, hoverVideoUrl } = validatedData
     const imageFile = formData.get("imageFile") as File | null
     const bookingImageFile = formData.get("bookingImageFile") as File | null
     const hoverVideoFile = formData.get("hoverVideoFile") as File | null
@@ -168,18 +179,27 @@ export async function createArtist(formData: FormData) {
 
     const resolvedSongs = await resolveSongsFromForm(formData)
 
-    const created = await prisma.artist.create({
-        data: {
-            name,
-            tagline: tagline?.trim() || null,
-            description,
-            albumCount: albumCount ?? null,
-            careerYears: careerYears ?? null,
-            imageUrl: imageUrl || null,
-            bookingImageUrl: bookingImageUrl || null,
-            hoverVideoUrl: hoverVideoUrl || null
-        },
-    })
+    let created
+    try {
+        created = await prisma.artist.create({
+            data: {
+                name,
+                slug,
+                tagline: tagline?.trim() || null,
+                description,
+                albumCount: albumCount ?? null,
+                careerYears: careerYears ?? null,
+                imageUrl: imageUrl || null,
+                bookingImageUrl: bookingImageUrl || null,
+                hoverVideoUrl: hoverVideoUrl || null
+            },
+        })
+    } catch (error) {
+        if (isUniqueViolation(error)) {
+            throw new Error("Ese slug ya está en uso por otro artista")
+        }
+        throw error
+    }
 
     if (resolvedSongs.length) {
         await persistSongsForArtist(created.id, resolvedSongs)
@@ -195,6 +215,7 @@ export async function updateArtist(formData: FormData) {
     const rawData = {
         id: formData.get("id"),
         name: formData.get("name"),
+        slug: String(formData.get("slug") ?? "").trim() || null,
         tagline: formData.get("tagline"),
         description: formData.get("description"),
         albumCount: formData.get("albumCount") || null,
@@ -207,7 +228,7 @@ export async function updateArtist(formData: FormData) {
     const validatedData = UpdateArtistSchema.parse(rawData)
 
     // eslint-disable-next-line prefer-const
-    let { id, name, tagline, description, albumCount, careerYears, imageUrl, bookingImageUrl, hoverVideoUrl } = validatedData
+    let { id, name, slug, tagline, description, albumCount, careerYears, imageUrl, bookingImageUrl, hoverVideoUrl } = validatedData
     const imageFile = formData.get("imageFile") as File | null
     const bookingImageFile = formData.get("bookingImageFile") as File | null
     const hoverVideoFile = formData.get("hoverVideoFile") as File | null
@@ -231,6 +252,7 @@ export async function updateArtist(formData: FormData) {
             where: { id },
             data: {
                 name,
+                slug,
                 tagline: tagline?.trim() || null,
                 description,
                 albumCount: albumCount ?? null,
@@ -244,6 +266,9 @@ export async function updateArtist(formData: FormData) {
         await persistSongsForArtist(id, resolvedSongs)
     } catch (error) {
         console.error("Server Action Error:", error)
+        if (isUniqueViolation(error)) {
+            throw new Error("Ese slug ya está en uso por otro artista")
+        }
         const errorMessage = error instanceof Error ? error.message : "Failed to update artist"
         throw new Error(errorMessage)
     }
@@ -252,6 +277,117 @@ export async function updateArtist(formData: FormData) {
     revalidatePath("/")
     revalidatePath(`/artist/${id}`)
     revalidatePath(`/admin/artists/${id}`)
+    if (slug) {
+        revalidatePath(`/e/${slug}`)
+    }
+}
+
+// ── Events (public ticket pages) ────────────────────────────────────────────
+
+const EventSchema = z.object({
+    artistId: z.string().min(1, "Artista requerido"),
+    title: z.string().optional().nullable(),
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida"),
+    venue: z.string().min(1, "Lugar requerido"),
+    city: z.string().min(1, "Ciudad requerida"),
+    state: z.string().optional().nullable(),
+    ticketUrl: z
+        .url("URL de boletos inválida")
+        .refine((u) => /^https?:\/\//.test(u), "La URL debe empezar con http(s)"),
+    flyerUrl: z.string().optional().nullable(),
+    isPublished: z.coerce.boolean(),
+})
+
+const UpdateEventSchema = EventSchema.extend({
+    id: z.string().min(1, "ID is required"),
+})
+
+function eventRawData(formData: FormData) {
+    return {
+        artistId: formData.get("artistId"),
+        title: String(formData.get("title") ?? "").trim() || null,
+        date: formData.get("date"),
+        venue: formData.get("venue"),
+        city: formData.get("city"),
+        state: String(formData.get("state") ?? "").trim() || null,
+        ticketUrl: formData.get("ticketUrl"),
+        flyerUrl: formData.get("flyerUrl"),
+        isPublished: formData.get("isPublished") === "on",
+    }
+}
+
+async function resolveFlyerUrl(formData: FormData, manualUrl: string | null | undefined): Promise<string | null> {
+    const flyerFile = formData.get("flyerFile") as File | null
+    if (flyerFile && flyerFile.size > 0) {
+        return uploadToGCS(flyerFile, "flyers")
+    }
+    return manualUrl || null
+}
+
+async function revalidateEventPages(artistId: string) {
+    revalidatePath("/admin/events")
+    const artist = await prisma.artist.findUnique({ where: { id: artistId }, select: { slug: true } })
+    if (artist?.slug) {
+        revalidatePath(`/e/${artist.slug}`)
+    }
+}
+
+export async function createEvent(formData: FormData) {
+    await checkAdmin()
+
+    const validated = EventSchema.parse(eventRawData(formData))
+    const flyerUrl = await resolveFlyerUrl(formData, validated.flyerUrl)
+
+    await prisma.event.create({
+        data: {
+            artistId: validated.artistId,
+            title: validated.title,
+            date: new Date(`${validated.date}T00:00:00Z`),
+            venue: validated.venue,
+            city: validated.city,
+            state: validated.state,
+            ticketUrl: validated.ticketUrl,
+            flyerUrl,
+            isPublished: validated.isPublished,
+        },
+    })
+
+    await revalidateEventPages(validated.artistId)
+}
+
+export async function updateEvent(formData: FormData) {
+    await checkAdmin()
+
+    const validated = UpdateEventSchema.parse({ ...eventRawData(formData), id: formData.get("id") })
+    const flyerUrl = await resolveFlyerUrl(formData, validated.flyerUrl)
+
+    await prisma.event.update({
+        where: { id: validated.id },
+        data: {
+            artistId: validated.artistId,
+            title: validated.title,
+            date: new Date(`${validated.date}T00:00:00Z`),
+            venue: validated.venue,
+            city: validated.city,
+            state: validated.state,
+            ticketUrl: validated.ticketUrl,
+            flyerUrl,
+            isPublished: validated.isPublished,
+        },
+    })
+
+    await revalidateEventPages(validated.artistId)
+}
+
+export async function deleteEvent(eventId: string) {
+    await checkAdmin()
+
+    const deleted = await prisma.event.delete({
+        where: { id: eventId },
+        select: { artistId: true },
+    })
+
+    await revalidateEventPages(deleted.artistId)
 }
 
 export async function updateArtistOrder(items: { id: string; order: number }[]) {

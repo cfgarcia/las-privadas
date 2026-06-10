@@ -65,6 +65,7 @@ model VerificationToken {
 model Artist {
   id              String         @id @default(cuid())
   name            String
+  slug            String?        @unique // short handle for public /e/[slug] page
   tagline         String?
   description     String
   albumCount      Int?
@@ -76,6 +77,7 @@ model Artist {
   availabilities  Availability[]
   bookings        Booking[]
   songs           Song[]
+  events          Event[]
 
   // Meta (Facebook + Instagram) integration for real-time DM webhook
   metaPageId    String?       @unique // FB page_id (e.g. "560288020819289" for El As)
@@ -94,6 +96,27 @@ model Song {
   createdAt DateTime @default(now())
 
   @@index([artistId, order])
+}
+
+// A public upcoming show listed on the artist's /e/[slug] ticket page.
+// "Boletos" buttons route through /go/[eventId] to count clicks before
+// redirecting to ticketUrl (Ticketón etc.).
+model Event {
+  id          String   @id @default(cuid())
+  artistId    String
+  artist      Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  title       String? // optional headline; venue is the fallback
+  date        DateTime // calendar date of the show, stored as midnight UTC
+  venue       String
+  city        String
+  state       String?
+  ticketUrl   String
+  flyerUrl    String?
+  clickCount  Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@index([artistId, date])
 }
 
 model Availability {

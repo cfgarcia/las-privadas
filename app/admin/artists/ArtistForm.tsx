@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { slugify } from "@/lib/slug"
 
 interface SongRow {
     localId: string
@@ -16,6 +17,7 @@ interface ArtistFormProps {
     artist?: {
         id: string
         name: string
+        slug: string | null
         tagline: string | null
         description: string
         albumCount: number | null
@@ -34,6 +36,7 @@ const newLocalId = () => `s${Date.now().toString(36)}-${++songLocalCounter}`
 export default function ArtistForm({ artist, songs, action }: ArtistFormProps) {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [slug, setSlug] = useState(artist?.slug ?? "")
     const [songRows, setSongRows] = useState<SongRow[]>(() =>
         (songs ?? []).map((s) => ({
             localId: newLocalId(),
@@ -117,8 +120,32 @@ export default function ArtistForm({ artist, songs, action }: ArtistFormProps) {
                     id="name"
                     required
                     defaultValue={artist?.name}
+                    onBlur={(e) => {
+                        if (!slug.trim()) setSlug(slugify(e.target.value))
+                    }}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gold focus:border-gold"
                 />
+            </div>
+
+            <div>
+                <label htmlFor="slug" className="block text-sm font-bold text-gray-700">
+                    Slug (página de eventos)
+                </label>
+                <input
+                    type="text"
+                    name="slug"
+                    id="slug"
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value)}
+                    pattern="[a-z0-9-]+"
+                    placeholder="elas"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gold focus:border-gold"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                    {slug.trim()
+                        ? <>La página pública de boletos será: <span className="font-mono text-gray-600">/e/{slug.trim()}</span> — ese es el link para la bio de Instagram.</>
+                        : "Solo minúsculas, números y guiones. Se llena solo al escribir el nombre; déjalo vacío si este artista no tendrá página de eventos."}
+                </p>
             </div>
 
             <div>
