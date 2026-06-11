@@ -117,7 +117,7 @@ export default async function ArtistEventsPage({ params }: PageProps) {
                                     {event.isSoldOut && (
                                         <div className="absolute inset-0 flex items-center justify-center">
                                             <span className="-rotate-12 border-4 border-red-600 text-red-500 bg-black/60 rounded-md px-6 py-2 text-3xl font-extrabold tracking-[0.3em] uppercase shadow-2xl shadow-black">
-                                                Agotado
+                                                Sold Out
                                             </span>
                                         </div>
                                     )}
