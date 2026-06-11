@@ -66,14 +66,14 @@ export default async function ArtistEventsPage({ params }: PageProps) {
                 {/* Header */}
                 <header className="flex flex-col items-center text-center mb-10">
                     {artist.imageUrl && (
-                        <div className="relative h-28 w-28 mb-5 rounded-full overflow-hidden ring-2 ring-gold ring-offset-4 ring-offset-[#0a0503]">
+                        <div className="relative w-44 aspect-[4/5] mb-6 rounded-2xl overflow-hidden ring-2 ring-gold ring-offset-4 ring-offset-[#0a0503]">
                             <Image
                                 src={artist.imageUrl}
                                 alt={artist.name}
                                 fill
-                                sizes="112px"
+                                sizes="176px"
                                 priority
-                                className="object-cover"
+                                className="object-cover object-top"
                             />
                         </div>
                     )}
