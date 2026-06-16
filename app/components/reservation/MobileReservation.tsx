@@ -63,9 +63,10 @@ const STEP_TITLES: Record<Step, { eyebrow: string; q: string }> = {
 type Props = {
   artist: ReservationArtist
   onSubmitBooking?: (b: Booking) => Promise<{ ok: boolean }> | { ok: boolean }
+  initialEventType?: 'personal' | 'negocio'
 }
 
-export default function MobileReservation({ artist, onSubmitBooking }: Props) {
+export default function MobileReservation({ artist, onSubmitBooking, initialEventType }: Props) {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [confirmation, setConfirmation] = useState<Booking | null>(null)
 
@@ -97,6 +98,7 @@ export default function MobileReservation({ artist, onSubmitBooking }: Props) {
         artist={artist}
         onClose={() => setSheetOpen(false)}
         onSubmit={handleSubmit}
+        initialEventType={initialEventType}
       />
       {confirmation && (
         <MobileConfirmation booking={confirmation} onClose={() => setConfirmation(null)} />
@@ -250,11 +252,12 @@ function MobileHero({ artist, onOpenSheet, onWhatsApp }: {
   )
 }
 
-function MobileSheet({ open, onClose, onSubmit, artist }: {
+function MobileSheet({ open, onClose, onSubmit, artist, initialEventType }: {
   open: boolean
   onClose: () => void
   onSubmit: (b: Booking) => void | Promise<void>
   artist: ReservationArtist
+  initialEventType?: 'personal' | 'negocio'
 }) {
   const [step, setStep] = useState(0)
   const [data, setData] = useState({
@@ -264,7 +267,7 @@ function MobileSheet({ open, onClose, onSubmit, artist }: {
     country: 'MX',
     state: '',
     city: '',
-    eventType: 'personal' as 'personal' | 'negocio',
+    eventType: (initialEventType ?? 'personal') as 'personal' | 'negocio',
     requests: '',
     name: '',
     contact: '',

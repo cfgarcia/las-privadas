@@ -9,11 +9,12 @@ type Props = {
   artist: ReservationArtist
   similar: ReservationArtist[]
   user?: { name?: string | null; email?: string | null }
+  initialEventType?: 'personal' | 'negocio'
 }
 
 const MOBILE_BREAKPOINT = 880
 
-export default function ReservationClient({ artist, similar, user }: Props) {
+export default function ReservationClient({ artist, similar, user, initialEventType }: Props) {
   const [isMobile, setIsMobile] = useState<boolean | null>(null)
 
   useEffect(() => {
@@ -51,13 +52,14 @@ export default function ReservationClient({ artist, similar, user }: Props) {
   }
 
   if (isMobile) {
-    return <MobileReservation artist={artist} onSubmitBooking={submit} />
+    return <MobileReservation artist={artist} onSubmitBooking={submit} initialEventType={initialEventType} />
   }
   return (
     <DesktopReservation
       artist={artist}
       similar={similar}
       onSubmitBooking={submit}
+      initialEventType={initialEventType}
     />
   )
 }

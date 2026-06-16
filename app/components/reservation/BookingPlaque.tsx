@@ -59,16 +59,17 @@ type Props = {
   artist: ReservationArtist
   onReserve?: (b: Booking) => void
   compact?: boolean
+  initialEventType?: 'personal' | 'negocio'
 }
 
-export default function BookingPlaque({ artist, onReserve, compact = false }: Props) {
+export default function BookingPlaque({ artist, onReserve, compact = false, initialEventType }: Props) {
   const [date, setDate] = useState<Date | null>(null)
   const [time, setTime] = useState<string>('noche')
   const [duration, setDuration] = useState(120)
   const [country, setCountry] = useState('MX')
   const [state, setState] = useState('')
   const [city, setCity] = useState('')
-  const [eventType, setEventType] = useState<'personal' | 'negocio'>('personal')
+  const [eventType, setEventType] = useState<'personal' | 'negocio'>(initialEventType ?? 'personal')
   const [requests, setRequests] = useState('')
   const [name, setName] = useState('')
   const [contact, setContact] = useState('')
