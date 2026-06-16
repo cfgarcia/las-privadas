@@ -4,10 +4,18 @@ import LoginModal from "../../components/LoginModal"
 import ReservationClient from "../../components/reservation/ReservationClient"
 import type { ReservationArtist } from "../../components/reservation/types"
 
-export default async function ArtistPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ArtistPage({
+    params,
+    searchParams,
+}: {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ type?: string }>
+}) {
     const session = await auth()
     const showLoginModal = !session
     const { id } = await params
+    const { type } = await searchParams
+    const initialEventType = type === "negocio" ? "negocio" : undefined
 
     const [artist, others] = await Promise.all([
         prisma.artist.findUnique({
@@ -49,6 +57,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
                 artist={reservationArtist}
                 similar={similar}
                 user={session?.user ?? undefined}
+                initialEventType={initialEventType}
             />
             {showLoginModal && <LoginModal />}
         </>

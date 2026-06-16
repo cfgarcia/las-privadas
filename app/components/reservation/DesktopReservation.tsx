@@ -16,9 +16,10 @@ type Props = {
   artist: ReservationArtist
   similar: ReservationArtist[]
   onSubmitBooking?: (b: Booking) => Promise<{ ok: boolean }> | { ok: boolean }
+  initialEventType?: 'personal' | 'negocio'
 }
 
-export default function DesktopReservation({ artist, similar, onSubmitBooking }: Props) {
+export default function DesktopReservation({ artist, similar, onSubmitBooking, initialEventType }: Props) {
   const [scrollY, setScrollY] = useState(0)
   const [confirmation, setConfirmation] = useState<Booking | null>(null)
 
@@ -64,7 +65,7 @@ export default function DesktopReservation({ artist, similar, onSubmitBooking }:
 
         <div style={{ position: 'relative' }}>
           <div style={{ position: 'sticky', top: 32 }}>
-            <BookingPlaque artist={artist} onReserve={handleReserve} />
+            <BookingPlaque artist={artist} onReserve={handleReserve} initialEventType={initialEventType} />
           </div>
         </div>
       </div>

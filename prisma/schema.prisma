@@ -79,11 +79,68 @@ model Artist {
   songs           Song[]
   events          Event[]
 
+  // ── Web EPK / press-kit (public /press/[slug]) ──────────────────────────
+  isPressPublished Boolean      @default(false) // gates appearance on /press
+  genre            String? // roster label/filter, e.g. "Corridos · Sierreño"
+  pressTaglineEn   String?
+  pressTaglineEs   String?
+  bioShortEn       String?
+  bioShortEs       String?
+  bioLongEn        String?
+  bioLongEs        String?
+  pressQuotes      Json? // [{ text, source, lang }]
+  pressStats       Json? // { monthlyListeners, topTrack, topTrackStreams, followers:{...}, asOf }
+  pressContacts    Json? // [{ name, role, phone, email }]
+  liveVideoUrl     String? // YouTube live video / playlist
+  spotifyUrl       String?
+  youtubeUrl       String?
+  instagramUrl     String?
+  tiktokUrl        String?
+  facebookUrl      String?
+  appleMusicUrl    String?
+  heroVideoUrl     String? // optional muted hero loop (mp4)
+  pressPhotos      PressPhoto[]
+  pressAssets      PressAsset[]
+
   // Meta (Facebook + Instagram) integration for real-time DM webhook
   metaPageId    String?       @unique // FB page_id (e.g. "560288020819289" for El As)
   metaIgId      String?       @unique // IG ig_user_id (e.g. "17841447820142294")
   metaPageToken String? // long-lived Page Access Token
   metaInquiries MetaInquiry[]
+}
+
+// A downloadable/viewable press photo in an artist's web EPK gallery.
+// Served from GCS. Hi-res `url` for download, optional `webUrl` for display.
+model PressPhoto {
+  id            String  @id @default(cuid())
+  artistId      String
+  artist        Artist  @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  url           String // hi-res original (GCS) — used for download
+  webUrl        String? // web-res for gallery display (GCS)
+  caption       String?
+  orientation   String? // "portrait" | "landscape" | "square"
+  credit        String?
+  order         Int     @default(0)
+  downloadCount Int     @default(0)
+
+  @@index([artistId, order])
+}
+
+// A downloadable asset in the press kit (PDFs, logo, data docs, photo zip).
+// Downloads route through /press/[slug]/download/[assetId] to count clicks.
+model PressAsset {
+  id            String  @id @default(cuid())
+  artistId      String
+  artist        Artist  @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  label         String
+  labelEs       String?
+  kind          String // epk_pdf | onesheet_pdf | data_doc | logo | photo_zip | other
+  url           String // GCS
+  fileSizeBytes Int?
+  order         Int     @default(0)
+  downloadCount Int     @default(0)
+
+  @@index([artistId, order])
 }
 
 model Song {
