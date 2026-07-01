@@ -1,21 +1,26 @@
 "use client"
 
+import { useLanguage } from "../context/LanguageContext"
+
 export default function Hero() {
+    const { t } = useLanguage()
+    const hero = t.home.hero
+
     return (
         <div className="relative z-[5] text-center px-6 pt-5 pb-2 w-full">
             {/* Editorial eyebrow flanked by hairlines */}
             <div
                 className="flex items-center justify-center gap-[18px] mb-[18px] uppercase"
                 style={{
-                    fontFamily: 'Sancreek, cursive',
-                    fontSize: 11,
+                    fontFamily: 'var(--font-accent), cursive',
+                    fontSize: 12,
                     letterSpacing: '0.36em',
-                    color: 'rgba(252,246,186,0.55)',
+                    color: 'rgba(242,229,184,0.72)',
                 }}
             >
-                <span className="block h-px" style={{ flex: '0 0 80px', background: 'rgba(212,175,55,0.45)' }} />
-                <span>Privada · 2026</span>
-                <span className="block h-px" style={{ flex: '0 0 80px', background: 'rgba(212,175,55,0.45)' }} />
+                <span className="block h-px" style={{ flex: '0 0 80px', background: 'rgba(201,162,74,0.5)' }} />
+                <span>{hero.eyebrow}</span>
+                <span className="block h-px" style={{ flex: '0 0 80px', background: 'rgba(201,162,74,0.5)' }} />
             </div>
 
             <div className="priv-hero-animated relative inline-block px-2">
@@ -27,7 +32,7 @@ export default function Hero() {
                         left: '50%',
                         top: '50%',
                         transform: 'translate(-50%, -52%)',
-                        fontFamily: 'Sancreek, cursive',
+                        fontFamily: 'var(--font-accent), cursive',
                         fontSize: 'clamp(110px, 16vw, 240px)',
                         letterSpacing: '0.06em',
                         lineHeight: 1,
@@ -36,7 +41,7 @@ export default function Hero() {
                         zIndex: 0,
                     }}
                 >
-                    RESERVA
+                    {hero.ghost}
                 </div>
 
                 {/* Gold-ink title with continuous shimmer wash */}
@@ -44,8 +49,8 @@ export default function Hero() {
                     className="priv-hero-title relative m-0"
                     style={{
                         zIndex: 1,
-                        fontFamily: 'Rye, serif',
-                        fontSize: 'clamp(72px, 10vw, 156px)',
+                        fontFamily: 'var(--font-western), serif',
+                        fontSize: 'clamp(64px, 10vw, 156px)',
                         letterSpacing: '0.04em',
                         lineHeight: 1.0,
                         background: 'linear-gradient(100deg, #8F6A1F 0%, #C9A24A 25%, #F2E5B8 50%, #C9A24A 75%, #8F6A1F 100%)',
@@ -57,7 +62,7 @@ export default function Hero() {
                         filter: 'drop-shadow(0 3px 0 rgba(0,0,0,0.55)) drop-shadow(0 0 36px rgba(232,199,122,0.30))',
                     }}
                 >
-                    Reserva tu Artista
+                    {hero.title}
                 </h1>
 
                 {/* Hand-drawn flourish underline that wipes in */}
@@ -65,6 +70,7 @@ export default function Hero() {
                     className="priv-hero-flourish relative block mx-auto mt-1.5"
                     viewBox="0 0 600 40"
                     preserveAspectRatio="none"
+                    aria-hidden="true"
                     style={{ zIndex: 1, width: '88%', height: 36, overflow: 'visible' }}
                 >
                     <defs>
@@ -98,13 +104,13 @@ export default function Hero() {
                         zIndex: 1,
                         margin: '20px auto 0',
                         maxWidth: 560,
-                        fontFamily: 'Playfair Display, serif',
-                        fontSize: 17,
+                        fontFamily: 'var(--font-body), serif',
+                        fontSize: 18,
                         lineHeight: 1.55,
-                        color: 'rgba(252,246,186,0.65)',
+                        color: 'rgba(242,229,184,0.86)',
                     }}
                 >
-                    Corridos, banda y norteño para tu próxima privada.
+                    {hero.subtitle}
                 </p>
             </div>
         </div>

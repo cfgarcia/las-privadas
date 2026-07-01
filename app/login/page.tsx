@@ -68,7 +68,7 @@ export default function LoginPage() {
                     style={{
                         gap: 10,
                         color: 'rgba(232,199,122,0.65)',
-                        fontFamily: 'Sancreek, cursive',
+                        fontFamily: 'var(--font-accent), cursive',
                         fontSize: 10,
                         letterSpacing: '0.32em',
                     }}
@@ -79,7 +79,7 @@ export default function LoginPage() {
                 <div
                     className="uppercase"
                     style={{
-                        fontFamily: 'Sancreek, cursive',
+                        fontFamily: 'var(--font-accent), cursive',
                         fontSize: 10,
                         letterSpacing: '0.42em',
                         color: 'rgba(232,199,122,0.45)',
@@ -104,7 +104,7 @@ export default function LoginPage() {
                     bottom: 24,
                     left: 0,
                     right: 0,
-                    fontFamily: 'Sancreek, cursive',
+                    fontFamily: 'var(--font-accent), cursive',
                     fontSize: 9,
                     letterSpacing: '0.42em',
                     color: 'rgba(232,199,122,0.30)',

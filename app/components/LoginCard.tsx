@@ -56,7 +56,7 @@ function BrassGoogleButton() {
                         ? 'inset 0 1px 0 rgba(255,255,255,0.55), 0 6px 18px rgba(0,0,0,0.55), 0 0 26px rgba(232,199,122,0.45)'
                         : 'inset 0 1px 0 rgba(255,255,255,0.45), 0 5px 14px rgba(0,0,0,0.50)',
                 color: '#2a1505',
-                fontFamily: 'Rye, serif',
+                fontFamily: 'var(--font-western), serif',
                 fontSize: 16,
                 letterSpacing: '0.16em',
                 transition: 'all 220ms cubic-bezier(0.16,1,0.3,1)',
@@ -181,7 +181,7 @@ export default function LoginCard({
                     '0 0 0 1px rgba(0,0,0,0.4)',
                 ].join(', '),
                 color: '#fcf6ba',
-                fontFamily: 'Playfair Display, serif',
+                fontFamily: 'var(--font-body), serif',
                 isolation: 'isolate',
             }}
         >
@@ -260,7 +260,7 @@ export default function LoginCard({
             <div
                 className="text-center uppercase"
                 style={{
-                    fontFamily: 'Sancreek, cursive',
+                    fontFamily: 'var(--font-accent), cursive',
                     fontSize: 10,
                     letterSpacing: '0.42em',
                     color: 'rgba(232,199,122,0.65)',
@@ -274,7 +274,7 @@ export default function LoginCard({
             <h1
                 className="m-0 text-center"
                 style={{
-                    fontFamily: 'Rye, serif',
+                    fontFamily: 'var(--font-western), serif',
                     fontSize: compact ? 38 : 44,
                     lineHeight: 1.0,
                     letterSpacing: '0.02em',
@@ -329,7 +329,7 @@ export default function LoginCard({
                 style={{
                     margin: '0 auto 28px',
                     maxWidth: 360,
-                    fontFamily: 'Playfair Display, serif',
+                    fontFamily: 'var(--font-body), serif',
                     fontSize: compact ? 14 : 15.5,
                     lineHeight: 1.55,
                     color: 'rgba(252,246,186,0.70)',
@@ -348,7 +348,7 @@ export default function LoginCard({
                 className="text-center uppercase"
                 style={{
                     marginTop: 20,
-                    fontFamily: 'Sancreek, cursive',
+                    fontFamily: 'var(--font-accent), cursive',
                     fontSize: 12,
                     letterSpacing: '0.26em',
                 }}
@@ -363,7 +363,7 @@ export default function LoginCard({
                 style={{
                     margin: '32px auto 0',
                     maxWidth: 320,
-                    fontFamily: 'Playfair Display, serif',
+                    fontFamily: 'var(--font-body), serif',
                     fontSize: 11,
                     color: 'rgba(232,199,122,0.40)',
                     lineHeight: 1.5,

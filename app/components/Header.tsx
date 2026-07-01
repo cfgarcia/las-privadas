@@ -29,7 +29,7 @@ export default function Header({ session }: HeaderProps) {
                 {/* Left — editorial eyebrow */}
                 <div className="hidden md:flex items-center gap-2.5 uppercase"
                     style={{
-                        fontFamily: 'Sancreek, cursive',
+                        fontFamily: 'var(--font-accent), cursive',
                         fontSize: 10,
                         letterSpacing: '0.32em',
                         color: 'rgba(252,246,186,0.55)',
@@ -93,7 +93,7 @@ export default function Header({ session }: HeaderProps) {
                             <Link href="/login" className="group flex items-center gap-2">
                                 <span
                                     className="font-bold uppercase text-[#D4AF37] group-hover:text-[#fcf6ba] transition-colors"
-                                    style={{ fontSize: 11, letterSpacing: '0.22em', fontFamily: 'Playfair Display, serif' }}
+                                    style={{ fontSize: 11, letterSpacing: '0.22em', fontFamily: 'var(--font-body), serif' }}
                                 >
                                     {t.home.sign_in}
                                 </span>

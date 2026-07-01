@@ -66,12 +66,12 @@ export default function ArtistHero({ artist, scrollY = 0, fallbackEyebrow }: Pro
         <Link href="/" style={{
           background: 'transparent', border: 0, cursor: 'pointer',
           color: '#fcf6ba',
-          fontFamily: 'Sancreek, cursive', fontSize: 11,
+          fontFamily: 'var(--font-accent), cursive', fontSize: 11,
           letterSpacing: '0.32em', textTransform: 'uppercase',
           textDecoration: 'none',
         }}>‹ Volver al roster</Link>
         <div style={{
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 16, letterSpacing: '0.18em',
           color: '#E8C77A',
         }}>LAS PRIVADAS</div>
@@ -86,7 +86,7 @@ export default function ArtistHero({ artist, scrollY = 0, fallbackEyebrow }: Pro
         zIndex: 2,
       }}>
         <div style={{
-          fontFamily: 'Sancreek, cursive',
+          fontFamily: 'var(--font-accent), cursive',
           fontSize: 12, letterSpacing: '0.42em',
           textTransform: 'uppercase',
           color: 'rgba(232,199,122,0.75)',
@@ -95,7 +95,7 @@ export default function ArtistHero({ artist, scrollY = 0, fallbackEyebrow }: Pro
 
         <h1 style={{
           margin: 0,
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 92,
           letterSpacing: '0.02em',
           lineHeight: 0.95,
@@ -116,7 +116,7 @@ export default function ArtistHero({ artist, scrollY = 0, fallbackEyebrow }: Pro
             <div style={{ height: 1, width: 36, background: '#E8C77A' }} />
             <p style={{
               margin: 0,
-              fontFamily: 'Playfair Display, serif',
+              fontFamily: 'var(--font-body), serif',
               fontStyle: 'italic',
               fontSize: 18, lineHeight: 1.5,
               color: 'rgba(252,246,186,0.85)',
@@ -129,7 +129,7 @@ export default function ArtistHero({ artist, scrollY = 0, fallbackEyebrow }: Pro
       <div style={{
         position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
         opacity: fadeOut * 0.7,
-        fontFamily: 'Sancreek, cursive',
+        fontFamily: 'var(--font-accent), cursive',
         fontSize: 9, letterSpacing: '0.42em',
         textTransform: 'uppercase',
         color: 'rgba(232,199,122,0.85)',

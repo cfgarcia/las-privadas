@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 const COLUMNS = [
     { label: 'Explorar', items: ['Artistas', 'Géneros', 'Ciudades'] },
     { label: 'La Casa', items: ['Quiénes somos', 'Para artistas', 'Prensa'] },
@@ -18,10 +20,10 @@ export default function PrivFooter() {
         <footer
             className="relative z-[2] w-full"
             style={{
-                padding: '64px 32px 32px',
+                padding: 'clamp(36px, 9vw, 64px) clamp(20px, 6vw, 32px) 32px',
                 background: bg,
                 color: txt,
-                fontFamily: 'Playfair Display, serif',
+                fontFamily: 'var(--font-body), serif',
             }}
         >
             {/* Top hairline + diamond ornament */}
@@ -57,17 +59,13 @@ export default function PrivFooter() {
             </div>
 
             <div
-                className="mx-auto grid items-start"
-                style={{
-                    maxWidth: 1100,
-                    gridTemplateColumns: 'minmax(220px, 1.4fr) repeat(3, minmax(0, 1fr))',
-                    gap: 40,
-                }}
+                className="priv-footer-grid mx-auto items-start"
+                style={{ maxWidth: 1100 }}
             >
                 <div>
                     <div
                         style={{
-                            fontFamily: 'Rye, serif',
+                            fontFamily: 'var(--font-western), serif',
                             fontSize: 22,
                             lineHeight: 1,
                             letterSpacing: '0.02em',
@@ -88,37 +86,69 @@ export default function PrivFooter() {
                     >
                         Reservas privadas con corridos, banda y norteño.
                     </p>
+
+                    {/* Titan Records seal — the label behind Las Privadas. */}
+                    <div className="flex items-center" style={{ gap: 12, marginTop: 18 }}>
+                        <Image
+                            src="/titan-seal.png"
+                            alt="Titan Records"
+                            width={52}
+                            height={52}
+                            style={{ width: 52, height: 52, opacity: 0.92 }}
+                        />
+                        <div>
+                            <div
+                                className="uppercase"
+                                style={{
+                                    fontFamily: 'var(--font-accent), cursive',
+                                    fontSize: 9,
+                                    letterSpacing: '0.3em',
+                                    color: 'rgba(232,199,122,0.7)',
+                                }}
+                            >
+                                Titan Records
+                            </div>
+                            <div
+                                className="italic"
+                                style={{ fontSize: 11, color: muted, marginTop: 2 }}
+                            >
+                                El Sonido del Éxito
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {COLUMNS.map((col) => (
-                    <div key={col.label}>
-                        <div
-                            className="uppercase"
-                            style={{
-                                fontFamily: 'Sancreek, cursive',
-                                fontSize: 9,
-                                letterSpacing: '0.32em',
-                                color: 'rgba(232,199,122,0.65)',
-                                marginBottom: 12,
-                            }}
-                        >
-                            {col.label}
+                <div className="priv-footer-links">
+                    {COLUMNS.map((col) => (
+                        <div key={col.label}>
+                            <div
+                                className="uppercase"
+                                style={{
+                                    fontFamily: 'var(--font-accent), cursive',
+                                    fontSize: 9,
+                                    letterSpacing: '0.32em',
+                                    color: 'rgba(232,199,122,0.65)',
+                                    marginBottom: 12,
+                                }}
+                            >
+                                {col.label}
+                            </div>
+                            <ul
+                                className="list-none p-0 m-0 flex flex-col"
+                                style={{ gap: 7 }}
+                            >
+                                {col.items.map((it) => (
+                                    <li
+                                        key={it}
+                                        style={{ fontSize: 12.5, color: txt, lineHeight: 1.4 }}
+                                    >
+                                        {it}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                        <ul
-                            className="list-none p-0 m-0 flex flex-col"
-                            style={{ gap: 7 }}
-                        >
-                            {col.items.map((it) => (
-                                <li
-                                    key={it}
-                                    style={{ fontSize: 12.5, color: txt, lineHeight: 1.4 }}
-                                >
-                                    {it}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             <div
@@ -140,7 +170,7 @@ export default function PrivFooter() {
                     className="flex uppercase"
                     style={{
                         gap: 20,
-                        fontFamily: 'Sancreek, cursive',
+                        fontFamily: 'var(--font-accent), cursive',
                         fontSize: 9,
                         letterSpacing: '0.28em',
                     }}

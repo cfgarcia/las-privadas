@@ -77,7 +77,7 @@ export default function DesktopReservation({ artist, similar, onSubmitBooking, i
         textAlign: 'center',
       }}>
         <div style={{
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 22,
           letterSpacing: '0.18em',
           background: 'linear-gradient(180deg, #fff8d6 0%, #f3e3a8 50%, #c89d3e 100%)',
@@ -87,7 +87,7 @@ export default function DesktopReservation({ artist, similar, onSubmitBooking, i
         }}>LAS PRIVADAS</div>
         <div style={{
           marginTop: 6,
-          fontFamily: 'Sancreek, cursive',
+          fontFamily: 'var(--font-accent), cursive',
           fontSize: 9, letterSpacing: '0.42em',
           textTransform: 'uppercase',
           color: 'rgba(232,199,122,0.55)',

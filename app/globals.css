@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Rye&family=Sancreek&display=swap');
+/* Fonts are self-hosted via next/font (see app/layout.tsx) and exposed as
+   --font-western / --font-body / --font-accent. No render-blocking @import. */
 
 @tailwind base;
 @tailwind components;
@@ -9,23 +10,40 @@
   --background-start-rgb: 253, 251, 247;
   --background-end-rgb: 245, 245, 220;
 
+  /* ── Surface (espresso/saddle leather) ── */
   --leather-night: #1a0f0a;
   --leather-mid: #2c1810;
   --leather-dark: #3E2723;
   --leather-deepest: #271c19;
+
+  /* ── Gold (single canonical family — mirrors tailwind.config.ts) ── */
   --gold: #C9A24A;
   --gold-light: #E8C77A;
   --gold-dark: #8F6A1F;
   --gold-pale: #F2E5B8;
   --gold-deep: #6B4A12;
 
+  /* ── Legibility roles (see DESIGN.md "Color & legibility") ──
+     text-safe-gold clears WCAG AA on espresso for body/subtitle text;
+     decoration-gold is for non-text accents (rules, gl, icons) only. */
+  --text-safe-gold: #F2E5B8;
+  --decoration-gold: #C9A24A;
+  --cream-text: #fcf6ba;
+
+  /* ── Titan Records — seal use ONLY (never a general accent) ── */
+  --titan-red: #E2231A;
+
+  /* ── Motion tokens ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur-normal: 300ms;
+  --dur-slow: 600ms;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: #1a0f0a;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-body), serif;
 }
 
 h1,
@@ -34,7 +52,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Rye', serif;
+  font-family: var(--font-western), serif;
   letter-spacing: 0.05em;
 }
 
@@ -259,8 +277,8 @@ h6 {
   border: 1px solid rgba(232,199,122,0.22);
   color: #fcf6ba;
   padding: 12px 14px;
-  font-family: 'Playfair Display', serif;
-  font-size: 14px;
+  font-family: var(--font-body), serif;
+  font-size: 16px;
   outline: none;
   transition: border-color 200ms, box-shadow 200ms, background 200ms;
   border-radius: 2px;
@@ -280,4 +298,62 @@ select.priv-input { appearance: none; -webkit-appearance: none; }
 .priv-input::-webkit-calendar-picker-indicator {
   filter: invert(75%) sepia(35%) saturate(450%) hue-rotate(5deg) brightness(95%);
   cursor: pointer;
+}
+
+/* ─── Film grain overlay (analog warmth) ────────────────────────────────────
+   Self-contained SVG noise (no network request). Drop as an absolutely-
+   positioned child inside a `position: relative` surface. Static by design —
+   not animated, so it is unaffected by reduced-motion. */
+.priv-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ─── Footer — brand block on top, link groups as a 3-up row on phones;
+   collapses into the 4-column desktop layout via display:contents. ──────── */
+.priv-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px 40px;
+}
+.priv-footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px 14px;
+}
+@media (min-width: 768px) {
+  .priv-footer-grid {
+    grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(0, 1fr));
+  }
+  /* children become direct grid items of the 4-col parent */
+  .priv-footer-links { display: contents; }
+}
+
+/* ─── Focus-visible ring — keyboard users get a clear gold ring ──────────── */
+:where(a, button, [role="button"], input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--text-safe-gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── Reduced-motion contract ────────────────────────────────────────────────
+   Honor the OS setting: neutralize infinite loops (shimmer, ghost-drift,
+   loader spin, scroll bounce, vinyl) and collapse entrances to their end
+   state. JS-driven motion (MainStage parallax, carousel flip) additionally
+   checks Framer Motion's useReducedMotion(). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

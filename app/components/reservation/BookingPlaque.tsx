@@ -99,7 +99,7 @@ export default function BookingPlaque({ artist, onReserve, compact = false, init
         '0 0 0 1px rgba(0,0,0,0.4)',
       ].join(', '),
       color: '#fcf6ba',
-      fontFamily: 'Playfair Display, serif',
+      fontFamily: 'var(--font-body), serif',
       isolation: 'isolate',
       overflow: 'hidden',
     }}>
@@ -118,7 +118,7 @@ export default function BookingPlaque({ artist, onReserve, compact = false, init
 
       <div style={{ position: 'relative', padding: '36px 32px 32px' }}>
         <div style={{
-          fontFamily: 'Sancreek, cursive',
+          fontFamily: 'var(--font-accent), cursive',
           fontSize: 10,
           letterSpacing: '0.42em',
           textTransform: 'uppercase',
@@ -128,7 +128,7 @@ export default function BookingPlaque({ artist, onReserve, compact = false, init
         }}>· Reserva privada ·</div>
         <h2 style={{
           margin: 0,
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 28,
           letterSpacing: '0.04em',
           textAlign: 'center',
@@ -313,7 +313,7 @@ function selectChevron(): CSSProperties {
 function FieldLabel({ children }: { children: ReactNode }) {
   return (
     <div style={{
-      fontFamily: 'Sancreek, cursive',
+      fontFamily: 'var(--font-accent), cursive',
       fontSize: 10,
       letterSpacing: '0.32em',
       textTransform: 'uppercase',
@@ -360,7 +360,7 @@ function Segmented({ options, value, onChange }: {
                 : 'transparent',
               border: 0,
               color: active ? '#2a1505' : 'rgba(252,246,186,0.85)',
-              fontFamily: 'Rye, serif',
+              fontFamily: 'var(--font-western), serif',
               fontSize: 12,
               letterSpacing: '0.06em',
               cursor: 'pointer',
@@ -395,7 +395,7 @@ function ChipBtn({ children, active, onClick, grow }: { children: ReactNode; act
           : '1px solid rgba(232,199,122,0.30)',
         borderRadius: 2,
         color: active ? '#2a1505' : '#fcf6ba',
-        fontFamily: 'Playfair Display, serif',
+        fontFamily: 'var(--font-body), serif',
         fontSize: 13,
         fontWeight: active ? 700 : 400,
         padding: '10px 14px',
@@ -428,7 +428,7 @@ function PhoneField({ country, value, onChange }: { country: string; value: stri
           padding: '0 12px',
           background: 'linear-gradient(180deg, rgba(232,199,122,0.15) 0%, rgba(232,199,122,0.05) 100%)',
           borderRight: '1px solid rgba(232,199,122,0.22)',
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 14,
           letterSpacing: '0.04em',
           color: '#E8C77A',
@@ -483,7 +483,7 @@ function BrassReservarButton({ disabled, onClick }: { disabled: boolean; onClick
               ? 'inset 0 1px 0 rgba(255,255,255,0.55), 0 6px 18px rgba(0,0,0,0.55), 0 0 26px rgba(232,199,122,0.45)'
               : 'inset 0 1px 0 rgba(255,255,255,0.45), 0 5px 14px rgba(0,0,0,0.50)'),
         color: disabled ? 'rgba(252,246,186,0.40)' : '#2a1505',
-        fontFamily: 'Rye, serif',
+        fontFamily: 'var(--font-western), serif',
         fontSize: 16,
         letterSpacing: '0.18em',
         textTransform: 'uppercase',

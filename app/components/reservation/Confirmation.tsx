@@ -92,7 +92,7 @@ export default function Confirmation({ booking, onClose }: Props) {
           background: 'radial-gradient(circle at 35% 30%, #f5e7b8 0%, #d4af55 40%, #8F6A1F 80%, #4A3210 100%)',
           boxShadow: '0 8px 22px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.45)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 14, color: '#2a1505',
           letterSpacing: '0.10em',
           textShadow: '0 1px 0 rgba(255,235,180,0.45)',
@@ -101,7 +101,7 @@ export default function Confirmation({ booking, onClose }: Props) {
 
         <div style={{
           textAlign: 'center',
-          fontFamily: 'Sancreek, cursive',
+          fontFamily: 'var(--font-accent), cursive',
           fontSize: 11, letterSpacing: '0.42em',
           textTransform: 'uppercase',
           color: 'rgba(232,199,122,0.65)',
@@ -110,7 +110,7 @@ export default function Confirmation({ booking, onClose }: Props) {
 
         <h2 style={{
           margin: 0, textAlign: 'center',
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 34,
           letterSpacing: '0.04em',
           background: 'linear-gradient(180deg, #fff8d6 0%, #f3e3a8 50%, #c89d3e 100%)',
@@ -122,7 +122,7 @@ export default function Confirmation({ booking, onClose }: Props) {
 
         <p style={{
           margin: '14px auto 26px', textAlign: 'center', maxWidth: 360,
-          fontFamily: 'Playfair Display, serif', fontStyle: 'italic',
+          fontFamily: 'var(--font-body), serif', fontStyle: 'italic',
           fontSize: 14, lineHeight: 1.5,
           color: 'rgba(252,246,186,0.70)',
         }}>
@@ -164,7 +164,7 @@ export default function Confirmation({ booking, onClose }: Props) {
             border: '1px solid rgba(252,246,186,0.45)',
             color: '#fcf6ba',
             textDecoration: 'none',
-            fontFamily: 'Rye, serif',
+            fontFamily: 'var(--font-western), serif',
             fontSize: 15,
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
@@ -183,7 +183,7 @@ export default function Confirmation({ booking, onClose }: Props) {
             display: 'block', margin: '14px auto 0',
             background: 'transparent', border: 0, cursor: 'pointer',
             color: 'rgba(252,246,186,0.55)',
-            fontFamily: 'Sancreek, cursive',
+            fontFamily: 'var(--font-accent), cursive',
             fontSize: 10, letterSpacing: '0.32em',
             textTransform: 'uppercase',
             borderBottom: '1px dotted rgba(232,199,122,0.30)',
@@ -199,14 +199,14 @@ function ReceiptRow({ label, value }: { label: ReactNode; value: ReactNode }) {
   return (
     <>
       <div style={{
-        fontFamily: 'Sancreek, cursive',
+        fontFamily: 'var(--font-accent), cursive',
         fontSize: 10, letterSpacing: '0.32em',
         textTransform: 'uppercase',
         color: 'rgba(232,199,122,0.55)',
         paddingTop: 2,
       }}>{label}</div>
       <div style={{
-        fontFamily: 'Playfair Display, serif',
+        fontFamily: 'var(--font-body), serif',
         color: '#fcf6ba',
         fontSize: 13, lineHeight: 1.4,
         whiteSpace: 'pre-wrap',

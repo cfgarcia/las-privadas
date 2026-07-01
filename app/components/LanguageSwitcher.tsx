@@ -6,7 +6,7 @@ export default function LanguageSwitcher() {
     const { language, setLanguage } = useLanguage()
 
     const baseStyle: React.CSSProperties = {
-        fontFamily: 'Playfair Display, serif',
+        fontFamily: 'var(--font-body), serif',
         fontWeight: 700,
         fontSize: 11,
         letterSpacing: '0.20em',

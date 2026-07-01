@@ -35,7 +35,7 @@ export default async function ArtistPage({
 
     if (!artist) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#0a0503] text-[#fcf6ba]" style={{ fontFamily: 'Playfair Display, serif', fontStyle: 'italic' }}>
+            <div className="min-h-screen flex items-center justify-center bg-[#0a0503] text-[#fcf6ba]" style={{ fontFamily: 'var(--font-body), serif', fontStyle: 'italic' }}>
                 Artist not found
             </div>
         )
