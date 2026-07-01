@@ -32,6 +32,15 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...but keep the example templates tracked
+!.env.example
+!.env.test.example
+
+# test artifacts (Playwright). Visual baselines (*-snapshots/) ARE committed.
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
 
 # vercel
 .vercel
