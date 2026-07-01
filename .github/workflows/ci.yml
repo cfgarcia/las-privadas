@@ -61,10 +61,14 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - name: Prisma generate · migrate · seed
+      - name: Prisma generate · push schema · seed
+        # `db push` syncs the throwaway DB straight from schema.prisma. We use it
+        # instead of `migrate deploy` because the committed migrations lag the
+        # schema (fields like Artist.hoverVideoUrl were added via db push in dev),
+        # so a migrate-built DB is missing columns the client expects.
         run: |
           npx prisma generate
-          npx prisma migrate deploy
+          npx prisma db push --skip-generate
           npx prisma db seed
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
