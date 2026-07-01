@@ -3,21 +3,27 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 async function main() {
+    // Demo roster for local dev + CI E2E. Images use via.placeholder.com,
+    // which is allowed by next.config remotePatterns (unsplash is not, and
+    // next/image throws on a disallowed host).
     const artists = [
         {
             name: 'The Midnight Jazz Trio',
             description: 'Smooth jazz for elegant evenings.',
-            imageUrl: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&q=80&w=800',
+            order: 0,
+            imageUrl: 'https://via.placeholder.com/800x1200/1a0f0a/E8C77A?text=Jazz+Trio',
         },
         {
             name: 'Electric Pulse',
             description: 'High energy rock band for parties.',
-            imageUrl: 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=800',
+            order: 1,
+            imageUrl: 'https://via.placeholder.com/800x1200/1a0f0a/E8C77A?text=Electric+Pulse',
         },
         {
             name: 'Acoustic Soul',
             description: 'Heartfelt acoustic covers and originals.',
-            imageUrl: 'https://images.unsplash.com/photo-1465847899078-b413929f7120?auto=format&fit=crop&q=80&w=800',
+            order: 2,
+            imageUrl: 'https://via.placeholder.com/800x1200/1a0f0a/E8C77A?text=Acoustic+Soul',
         },
     ]
 

@@ -1,7 +1,9 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { useReducedMotion } from "framer-motion"
 
+import { useLanguage } from "../context/LanguageContext"
 import Header from "./Header"
 import Hero from "./Hero"
 import ArtistCarousel from "./ArtistCarousel"
@@ -27,6 +29,8 @@ const CAROUSEL_HOLD = 480
 const CAROUSEL_EXIT = 600
 
 export default function MainStage({ artists, initialSlide, session }: MainStageProps) {
+    const { t: copy } = useLanguage()
+    const prefersReduced = useReducedMotion()
     const scrollRef = useRef<HTMLDivElement>(null)
     const [scrollY, setScrollY] = useState(0)
     const [headerHidden, setHeaderHidden] = useState(false)
@@ -59,26 +63,28 @@ export default function MainStage({ artists, initialSlide, session }: MainStageP
         return () => el.removeEventListener('scroll', onScroll)
     }, [])
 
-    // Hero fade-out across first FADE_LEN of scroll
+    // Hero fade-out across first FADE_LEN of scroll. Opacity fades are kept
+    // under reduced-motion (scroll-linked reveals, not auto-motion); the
+    // travel/scale/blur parallax is neutralized.
     const t = Math.min(1, scrollY / FADE_LEN)
     const heroOpacity = Math.max(0, 1 - t * 1.4)
-    const heroTranslate = -t * 60
-    const heroScale = 1 - t * 0.08
-    const heroBlur = t * 4
+    const heroTranslate = prefersReduced ? 0 : -t * 60
+    const heroScale = prefersReduced ? 1 : 1 - t * 0.08
+    const heroBlur = prefersReduced ? 0 : t * 4
     const heroPointer = t > 0.85 ? 'none' : 'auto'
 
     // Carousel comes into focus on entry, parallaxes on exit.
     // `carEntryPullY` lifts the carousel upward as the hero fades, so the
     // search bar + cards land in the upper-middle of the viewport instead of
     // sitting in the bottom half after the hero is gone.
-    const carInScale = 0.94 + t * 0.06
+    const carInScale = prefersReduced ? 1 : 0.94 + t * 0.06
     const carOpacity = 0.55 + t * 0.45
-    const carEntryPullY = -t * 80
+    const carEntryPullY = prefersReduced ? 0 : -t * 80
 
     const exitStart = FADE_LEN + CAROUSEL_HOLD
     const exitT = Math.max(0, Math.min(1, (scrollY - exitStart) / CAROUSEL_EXIT))
-    const carParallaxY = -exitT * 120
-    const carExitScale = 1 - exitT * 0.06
+    const carParallaxY = prefersReduced ? 0 : -exitT * 120
+    const carExitScale = prefersReduced ? 1 : 1 - exitT * 0.06
     const carExitOpacity = 1 - exitT * 0.55
 
     const cueOpacity = Math.max(0, 1 - t * 3)
@@ -125,17 +131,11 @@ export default function MainStage({ artists, initialSlide, session }: MainStageP
                         width: '90%',
                         height: '70%',
                         background:
-                            'radial-gradient(ellipse at 50% 30%, rgba(212,175,55,0.10) 0%, rgba(212,175,55,0.03) 30%, transparent 60%)',
+                            'radial-gradient(ellipse at 50% 30%, rgba(201,162,74,0.10) 0%, rgba(201,162,74,0.03) 30%, transparent 60%)',
                     }}
                 />
-                {/* Paper grain */}
-                <div
-                    className="absolute inset-0 pointer-events-none opacity-[0.12] mix-blend-overlay"
-                    style={{
-                        backgroundImage:
-                            'url(https://www.transparenttextures.com/patterns/stardust.png)',
-                    }}
-                />
+                {/* Film grain (self-contained, no network request) */}
+                <div className="priv-grain" />
                 {/* Outer vignette */}
                 <div
                     className="absolute inset-0 pointer-events-none"
@@ -189,13 +189,13 @@ export default function MainStage({ artists, initialSlide, session }: MainStageP
                     <span
                         className="uppercase"
                         style={{
-                            fontFamily: 'Sancreek, cursive',
-                            fontSize: 10,
+                            fontFamily: 'var(--font-accent), cursive',
+                            fontSize: 11,
                             letterSpacing: '0.36em',
-                            color: 'rgba(232,199,122,0.65)',
+                            color: 'rgba(242,229,184,0.78)',
                         }}
                     >
-                        Desliza para conocer a los artistas
+                        {copy.home.hero.scroll_cue}
                     </span>
                     <div
                         className="relative"

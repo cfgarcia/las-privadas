@@ -64,7 +64,7 @@ export default function CardBack() {
                 />
                 <div
                     style={{
-                        fontFamily: 'Rye, serif',
+                        fontFamily: 'var(--font-western), serif',
                         fontSize: 20,
                         lineHeight: 1.0,
                         letterSpacing: '0.08em',
@@ -78,7 +78,7 @@ export default function CardBack() {
                 <div
                     className="uppercase"
                     style={{
-                        fontFamily: 'Sancreek, cursive',
+                        fontFamily: 'var(--font-accent), cursive',
                         fontSize: 9,
                         letterSpacing: '0.42em',
                         color: 'rgba(232,199,122,0.75)',

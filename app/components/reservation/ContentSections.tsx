@@ -14,7 +14,7 @@ export function SectionHeading({ eyebrow, title }: { eyebrow: string; title: str
   return (
     <div style={{ marginBottom: 28 }}>
       <div style={{
-        fontFamily: 'Sancreek, cursive',
+        fontFamily: 'var(--font-accent), cursive',
         fontSize: 11,
         letterSpacing: '0.42em',
         textTransform: 'uppercase',
@@ -23,7 +23,7 @@ export function SectionHeading({ eyebrow, title }: { eyebrow: string; title: str
       }}>· {eyebrow} ·</div>
       <h2 style={{
         margin: 0,
-        fontFamily: 'Rye, serif',
+        fontFamily: 'var(--font-western), serif',
         fontSize: 36,
         letterSpacing: '0.04em',
         lineHeight: 1.1,
@@ -46,7 +46,7 @@ export function BioSection({ artist }: { artist: ReservationArtist }) {
     <section style={{ paddingBottom: 80 }}>
       <SectionHeading eyebrow="Quiénes son" title="La historia" />
       <p style={{
-        fontFamily: 'Playfair Display, serif',
+        fontFamily: 'var(--font-body), serif',
         fontSize: 19,
         lineHeight: 1.7,
         color: 'rgba(252,246,186,0.85)',
@@ -77,14 +77,14 @@ function Stat({ n, label }: { n: string; label: string }) {
   return (
     <div>
       <div style={{
-        fontFamily: 'Rye, serif',
+        fontFamily: 'var(--font-western), serif',
         fontSize: 26, color: '#E8C77A',
         letterSpacing: '0.04em',
         lineHeight: 1,
       }}>{n}</div>
       <div style={{
         marginTop: 6,
-        fontFamily: 'Sancreek, cursive',
+        fontFamily: 'var(--font-accent), cursive',
         fontSize: 9, letterSpacing: '0.32em',
         textTransform: 'uppercase',
         color: 'rgba(232,199,122,0.55)',
@@ -124,7 +124,7 @@ export function SetlistSection({ songs }: { songs?: ReservationSong[] }) {
                 border: '1px solid ' + (on ? 'rgba(252,246,186,0.65)' : 'rgba(232,199,122,0.30)'),
                 borderRadius: 999,
                 color: on ? '#2a1505' : '#fcf6ba',
-                fontFamily: 'Playfair Display, serif',
+                fontFamily: 'var(--font-body), serif',
                 fontSize: 13,
                 fontStyle: 'italic',
                 padding: '10px 18px',
@@ -144,7 +144,7 @@ export function SetlistSection({ songs }: { songs?: ReservationSong[] }) {
       {picked.size > 0 && (
         <div style={{
           marginTop: 22, fontSize: 12,
-          fontFamily: 'Sancreek, cursive',
+          fontFamily: 'var(--font-accent), cursive',
           letterSpacing: '0.28em',
           textTransform: 'uppercase',
           color: 'rgba(232,199,122,0.65)',
@@ -247,7 +247,7 @@ export function AudioSection({ songs }: { songs?: ReservationSong[] }) {
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{
-            fontFamily: 'Sancreek, cursive',
+            fontFamily: 'var(--font-accent), cursive',
             fontSize: 10, letterSpacing: '0.32em',
             textTransform: 'uppercase',
             color: 'rgba(232,199,122,0.55)',
@@ -258,7 +258,7 @@ export function AudioSection({ songs }: { songs?: ReservationSong[] }) {
               : 'Track 01 · Bolero'}
           </div>
           <div style={{
-            fontFamily: 'Rye, serif',
+            fontFamily: 'var(--font-western), serif',
             fontSize: 18, color: '#fcf6ba',
             letterSpacing: '0.04em',
             marginBottom: 14,
@@ -288,7 +288,7 @@ export function AudioSection({ songs }: { songs?: ReservationSong[] }) {
                       border: '1px solid ' + (active ? 'rgba(252,246,186,0.65)' : 'rgba(232,199,122,0.30)'),
                       borderRadius: 999,
                       color: active ? '#2a1505' : '#fcf6ba',
-                      fontFamily: 'Playfair Display, serif',
+                      fontFamily: 'var(--font-body), serif',
                       fontStyle: 'italic',
                       fontSize: 11,
                       padding: '6px 12px',
@@ -445,7 +445,7 @@ function SimilarCard({ artist }: { artist: ReservationArtist }) {
       <div style={{ padding: '18px 18px 20px' }}>
         {artist.genre && (
           <div style={{
-            fontFamily: 'Sancreek, cursive',
+            fontFamily: 'var(--font-accent), cursive',
             fontSize: 9, letterSpacing: '0.32em',
             textTransform: 'uppercase',
             color: 'rgba(232,199,122,0.55)',
@@ -453,14 +453,14 @@ function SimilarCard({ artist }: { artist: ReservationArtist }) {
           }}>{artist.genre}</div>
         )}
         <div style={{
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 18, color: '#fcf6ba',
           letterSpacing: '0.04em',
           marginBottom: 4,
         }}>{artist.name}</div>
         {artist.city && (
           <div style={{
-            fontFamily: 'Playfair Display, serif',
+            fontFamily: 'var(--font-body), serif',
             fontSize: 12, fontStyle: 'italic',
             color: 'rgba(252,246,186,0.55)',
           }}>{artist.city}</div>

@@ -163,7 +163,7 @@ function MobileHero({ artist, onOpenSheet, onWhatsApp }: {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>‹</Link>
         <div style={{
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 13, letterSpacing: '0.18em',
           color: '#E8C77A',
         }}>LAS PRIVADAS</div>
@@ -176,7 +176,7 @@ function MobileHero({ artist, onOpenSheet, onWhatsApp }: {
         zIndex: 4,
       }}>
         <div style={{
-          fontFamily: 'Sancreek, cursive',
+          fontFamily: 'var(--font-accent), cursive',
           fontSize: 10, letterSpacing: '0.42em',
           textTransform: 'uppercase',
           color: 'rgba(232,199,122,0.75)',
@@ -185,7 +185,7 @@ function MobileHero({ artist, onOpenSheet, onWhatsApp }: {
 
         <h1 style={{
           margin: 0,
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 44,
           letterSpacing: '0.02em',
           lineHeight: 0.95,
@@ -199,7 +199,7 @@ function MobileHero({ artist, onOpenSheet, onWhatsApp }: {
         {artist.tagline && (
           <p style={{
             margin: '14px 0 24px',
-            fontFamily: 'Playfair Display, serif',
+            fontFamily: 'var(--font-body), serif',
             fontStyle: 'italic',
             fontSize: 15, lineHeight: 1.5,
             color: 'rgba(252,246,186,0.80)',
@@ -216,7 +216,7 @@ function MobileHero({ artist, onOpenSheet, onWhatsApp }: {
             border: '1px solid rgba(252,246,186,0.55)',
             borderRadius: 4,
             color: '#2a1505',
-            fontFamily: 'Rye, serif',
+            fontFamily: 'var(--font-western), serif',
             fontSize: 17,
             letterSpacing: '0.16em',
             textTransform: 'uppercase',
@@ -238,7 +238,7 @@ function MobileHero({ artist, onOpenSheet, onWhatsApp }: {
             border: '1px solid rgba(232,199,122,0.30)',
             borderRadius: 4,
             color: '#fcf6ba',
-            fontFamily: 'Sancreek, cursive',
+            fontFamily: 'var(--font-accent), cursive',
             fontSize: 11,
             letterSpacing: '0.30em',
             textTransform: 'uppercase',
@@ -369,7 +369,7 @@ function MobileSheet({ open, onClose, onSubmit, artist, initialEventType }: {
             >‹</button>
           ) : <div style={{ width: 36 }} />}
           <div style={{
-            fontFamily: 'Sancreek, cursive',
+            fontFamily: 'var(--font-accent), cursive',
             fontSize: 9, letterSpacing: '0.42em',
             textTransform: 'uppercase',
             color: 'rgba(232,199,122,0.65)',
@@ -388,7 +388,7 @@ function MobileSheet({ open, onClose, onSubmit, artist, initialEventType }: {
         }}>
           <h2 style={{
             margin: '0 0 24px',
-            fontFamily: 'Rye, serif',
+            fontFamily: 'var(--font-western), serif',
             fontSize: 26,
             letterSpacing: '0.02em',
             lineHeight: 1.15,
@@ -420,7 +420,7 @@ function MobileSheet({ open, onClose, onSubmit, artist, initialEventType }: {
               border: '1px solid ' + (canAdvance() ? 'rgba(252,246,186,0.55)' : 'rgba(232,199,122,0.18)'),
               borderRadius: 4,
               color: canAdvance() ? '#2a1505' : 'rgba(252,246,186,0.40)',
-              fontFamily: 'Rye, serif',
+              fontFamily: 'var(--font-western), serif',
               fontSize: 15,
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
@@ -441,7 +441,7 @@ function MobileSheet({ open, onClose, onSubmit, artist, initialEventType }: {
               target="_blank" rel="noopener noreferrer"
               style={{
                 color: 'rgba(252,246,186,0.55)',
-                fontFamily: 'Sancreek, cursive',
+                fontFamily: 'var(--font-accent), cursive',
                 fontSize: 10, letterSpacing: '0.30em',
                 textTransform: 'uppercase',
                 textDecoration: 'none',
@@ -548,7 +548,7 @@ function StepBody({ stepKey, data, update }: {
           />
           <p style={{
             margin: '12px 4px 0',
-            fontFamily: 'Playfair Display, serif',
+            fontFamily: 'var(--font-body), serif',
             fontStyle: 'italic',
             fontSize: 13,
             color: 'rgba(252,246,186,0.55)',
@@ -634,7 +634,7 @@ function LocationPicker({ data, update }: { data: MobileSheetData; update: Mutat
 
       <p style={{
         margin: '4px 4px 0',
-        fontFamily: 'Playfair Display, serif',
+        fontFamily: 'var(--font-body), serif',
         fontStyle: 'italic',
         fontSize: 13,
         color: 'rgba(252,246,186,0.55)',
@@ -647,7 +647,7 @@ function LocationPicker({ data, update }: { data: MobileSheetData; update: Mutat
 function FieldHint({ label }: { label: ReactNode }) {
   return (
     <div style={{
-      fontFamily: 'Sancreek, cursive',
+      fontFamily: 'var(--font-accent), cursive',
       fontSize: 9, letterSpacing: '0.32em',
       textTransform: 'uppercase',
       color: 'rgba(232,199,122,0.65)',
@@ -685,14 +685,14 @@ function BigTapRow({ active, onClick, title, hint }: {
     >
       <div>
         <div style={{
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 18, letterSpacing: '0.04em',
           color: active ? '#fff8d6' : '#fcf6ba',
         }}>{title}</div>
         {hint && (
           <div style={{
             marginTop: 2,
-            fontFamily: 'Playfair Display, serif',
+            fontFamily: 'var(--font-body), serif',
             fontStyle: 'italic',
             fontSize: 12,
             color: 'rgba(252,246,186,0.55)',
@@ -730,7 +730,7 @@ function BigInput({ placeholder, value, onChange, hint, autoFocus }: {
       {hint && (
         <p style={{
           margin: '12px 4px 0',
-          fontFamily: 'Playfair Display, serif',
+          fontFamily: 'var(--font-body), serif',
           fontStyle: 'italic',
           fontSize: 13,
           color: 'rgba(252,246,186,0.55)',
@@ -775,7 +775,7 @@ function PhoneInput({ country, value, onChange, hint }: {
             padding: '0 14px',
             background: 'linear-gradient(180deg, rgba(232,199,122,0.15) 0%, rgba(232,199,122,0.05) 100%)',
             borderRight: '1px solid rgba(232,199,122,0.22)',
-            fontFamily: 'Rye, serif',
+            fontFamily: 'var(--font-western), serif',
             fontSize: 17,
             letterSpacing: '0.04em',
             color: '#E8C77A',
@@ -802,7 +802,7 @@ function PhoneInput({ country, value, onChange, hint }: {
       {hint && (
         <p style={{
           margin: '12px 4px 0',
-          fontFamily: 'Playfair Display, serif',
+          fontFamily: 'var(--font-body), serif',
           fontStyle: 'italic',
           fontSize: 13,
           color: 'rgba(252,246,186,0.55)',
@@ -851,7 +851,7 @@ function MobileConfirmation({ booking, onClose }: { booking: Booking; onClose: (
         background: 'radial-gradient(circle at 35% 30%, #f5e7b8 0%, #d4af55 40%, #8F6A1F 80%, #4A3210 100%)',
         boxShadow: '0 8px 22px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.45), 0 0 30px rgba(232,199,122,0.35)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: 'Rye, serif',
+        fontFamily: 'var(--font-western), serif',
         fontSize: 16, color: '#2a1505',
         letterSpacing: '0.10em',
         textShadow: '0 1px 0 rgba(255,235,180,0.45)',
@@ -859,7 +859,7 @@ function MobileConfirmation({ booking, onClose }: { booking: Booking; onClose: (
 
       <div style={{
         textAlign: 'center',
-        fontFamily: 'Sancreek, cursive',
+        fontFamily: 'var(--font-accent), cursive',
         fontSize: 10, letterSpacing: '0.42em',
         textTransform: 'uppercase',
         color: 'rgba(232,199,122,0.65)',
@@ -868,7 +868,7 @@ function MobileConfirmation({ booking, onClose }: { booking: Booking; onClose: (
 
       <h2 style={{
         margin: 0, textAlign: 'center',
-        fontFamily: 'Rye, serif',
+        fontFamily: 'var(--font-western), serif',
         fontSize: 32,
         letterSpacing: '0.04em',
         background: 'linear-gradient(180deg, #fff8d6 0%, #f3e3a8 50%, #c89d3e 100%)',
@@ -880,7 +880,7 @@ function MobileConfirmation({ booking, onClose }: { booking: Booking; onClose: (
 
       <p style={{
         margin: '14px auto 26px', textAlign: 'center', maxWidth: 320,
-        fontFamily: 'Playfair Display, serif', fontStyle: 'italic',
+        fontFamily: 'var(--font-body), serif', fontStyle: 'italic',
         fontSize: 14, lineHeight: 1.55,
         color: 'rgba(252,246,186,0.70)',
       }}>
@@ -916,7 +916,7 @@ function MobileConfirmation({ booking, onClose }: { booking: Booking; onClose: (
           borderRadius: 4,
           color: '#fcf6ba',
           textDecoration: 'none',
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 14,
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
@@ -935,7 +935,7 @@ function MobileConfirmation({ booking, onClose }: { booking: Booking; onClose: (
           display: 'block', margin: '20px auto 0',
           background: 'transparent', border: 0, cursor: 'pointer',
           color: 'rgba(252,246,186,0.55)',
-          fontFamily: 'Sancreek, cursive',
+          fontFamily: 'var(--font-accent), cursive',
           fontSize: 10, letterSpacing: '0.30em',
           textTransform: 'uppercase',
           borderBottom: '1px dotted rgba(232,199,122,0.30)',
@@ -954,7 +954,7 @@ function Row({ label, value, last }: { label: string; value: string; last?: bool
       borderBottom: last ? 'none' : '1px solid rgba(232,199,122,0.15)',
     }}>
       <div style={{
-        fontFamily: 'Sancreek, cursive',
+        fontFamily: 'var(--font-accent), cursive',
         fontSize: 9, letterSpacing: '0.32em',
         textTransform: 'uppercase',
         color: 'rgba(232,199,122,0.55)',
@@ -962,7 +962,7 @@ function Row({ label, value, last }: { label: string; value: string; last?: bool
         flexShrink: 0,
       }}>{label}</div>
       <div style={{
-        fontFamily: 'Playfair Display, serif',
+        fontFamily: 'var(--font-body), serif',
         fontSize: 13, lineHeight: 1.4,
         color: '#fcf6ba',
         textAlign: 'right',

@@ -12,6 +12,21 @@ export const dictionary = {
             sign_out: "Cerrar sesión",
             view_details: "Ver Detalles",
             hi: "Hola",
+            hero: {
+                eyebrow: "Titan Records",
+                ghost: "PRIVADA",
+                title: "Reserva tu artista",
+                subtitle: "Elige tu artista. Llevamos el corrido a tu privada.",
+                scroll_cue: "Desliza y conoce el roster",
+            },
+            interlude: {
+                eyebrow: "La privada continúa",
+                title_em: "Tu privada",
+                title_rest: ", con artista en vivo.",
+                body: "Eliges al artista, nosotros llevamos el show. Tú pones la privada.",
+            },
+            empty_title: "Vienen más nombres",
+            empty_body: "Estamos cerrando fechas con más artistas. Vuelve pronto.",
         },
         artist: {
             back_to_catalog: "Volver al Catálogo",
@@ -106,6 +121,21 @@ export const dictionary = {
             sign_out: "Sign out",
             view_details: "View Details",
             hi: "Hi",
+            hero: {
+                eyebrow: "Titan Records",
+                ghost: "PRIVADA",
+                title: "Book your artist",
+                subtitle: "Pick your artist. We bring the corrido to your party.",
+                scroll_cue: "Swipe to meet the roster",
+            },
+            interlude: {
+                eyebrow: "The party continues",
+                title_em: "Your party",
+                title_rest: ", live on stage.",
+                body: "You pick the artist, we bring the show. You bring the party.",
+            },
+            empty_title: "More names coming",
+            empty_body: "We're locking in dates with more artists. Check back soon.",
         },
         artist: {
             back_to_catalog: "Back to Catalog",

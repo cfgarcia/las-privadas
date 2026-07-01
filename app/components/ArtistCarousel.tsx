@@ -1,7 +1,10 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
+import { useReducedMotion } from "framer-motion"
 
+import { useLanguage } from "../context/LanguageContext"
+import { filterArtists, normalize } from "@/lib/search"
 import CarouselCard from './CarouselCard'
 import CardBack from './CardBack'
 import SearchBar from './SearchBar'
@@ -21,9 +24,6 @@ interface ArtistCarouselProps {
     exitProgress?: number
 }
 
-const norm = (s: string | null | undefined) =>
-    (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-
 const arrowBtn = (side: 'left' | 'right'): React.CSSProperties => ({
     position: 'absolute',
     [side]: 24,
@@ -36,7 +36,7 @@ const arrowBtn = (side: 'left' | 'right'): React.CSSProperties => ({
     color: '#fcf6ba',
     border: '1px solid rgba(212,175,55,0.55)',
     fontSize: 30,
-    fontFamily: 'Rye, serif',
+    fontFamily: 'var(--font-western), serif',
     cursor: 'pointer',
     zIndex: 100,
     boxShadow: '0 8px 20px rgba(0,0,0,0.55), inset 0 1px 0 rgba(232,199,122,0.20)',
@@ -53,16 +53,17 @@ export default function ArtistCarousel({
     scrollProgress = 0,
     exitProgress = 0,
 }: ArtistCarouselProps) {
+    const { t: copy } = useLanguage()
+    const prefersReduced = useReducedMotion()
     const [index, setIndex] = useState(initialSlide)
     const [query, setQuery] = useState('')
 
-    const q = norm(query.trim())
-    const artists = useMemo(() => {
-        if (!q) return allArtists
-        return allArtists.filter(
-            (a) => norm(a.name).includes(q) || norm(a.description).includes(q),
-        )
-    }, [allArtists, q])
+    // Touch swipe — phones expect to drag between cards, not just tap arrows.
+    const touchStartRef = useRef<{ x: number; y: number } | null>(null)
+    const swipedRef = useRef(false)
+
+    const q = normalize(query.trim())
+    const artists = useMemo(() => filterArtists(allArtists, query), [allArtists, query])
 
     // When the query changes mid-session: jump to the first matching result
     // while filtering, and restore the center-out `initialSlide` once cleared.
@@ -79,6 +80,27 @@ export default function ArtistCarousel({
     const total = artists.length
     const prev = () => setIndex((i) => (i - 1 + total) % total)
     const next = () => setIndex((i) => (i + 1) % total)
+
+    const SWIPE_THRESHOLD = 40
+    const onTouchStart = (e: React.TouchEvent) => {
+        const tch = e.touches[0]
+        touchStartRef.current = { x: tch.clientX, y: tch.clientY }
+        swipedRef.current = false
+    }
+    const onTouchEnd = (e: React.TouchEvent) => {
+        const start = touchStartRef.current
+        if (!start) return
+        const tch = e.changedTouches[0]
+        const dx = tch.clientX - start.x
+        const dy = tch.clientY - start.y
+        // Horizontal intent only — ignore vertical scrolls.
+        if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+            swipedRef.current = true // suppress the card's tap-to-navigate
+            if (dx < 0) next()
+            else prev()
+        }
+        touchStartRef.current = null
+    }
 
     const searchAppear = Math.max(0, Math.min(1, (scrollProgress - 0.45) / 0.4))
 
@@ -110,25 +132,25 @@ export default function ArtistCarousel({
                 >
                     <div
                         style={{
-                            fontFamily: 'Rye, serif',
+                            fontFamily: 'var(--font-western), serif',
                             fontSize: 22,
                             color: '#fcf6ba',
                             letterSpacing: '0.04em',
                             marginBottom: 8,
                         }}
                     >
-                        Más artistas próximamente
+                        {copy.home.empty_title}
                     </div>
                     <p
                         className="m-0 italic"
                         style={{
-                            fontFamily: 'Playfair Display, serif',
-                            fontSize: 14,
-                            color: 'rgba(252,246,186,0.65)',
+                            fontFamily: 'var(--font-body), serif',
+                            fontSize: 15,
+                            color: 'rgba(242,229,184,0.82)',
                             lineHeight: 1.55,
                         }}
                     >
-                        Estamos sumando nuevos nombres al catálogo. Vuelve a buscar pronto.
+                        {copy.home.empty_body}
                     </p>
                 </div>
             )}
@@ -136,6 +158,8 @@ export default function ArtistCarousel({
             {total > 0 && (
                 <div
                     className="relative w-full flex-1 flex items-center justify-center"
+                    onTouchStart={onTouchStart}
+                    onTouchEnd={onTouchEnd}
                     style={{
                         perspective: 2200,
                         padding: '0 24px 60px',
@@ -177,8 +201,10 @@ export default function ArtistCarousel({
                             Math.min(1, (scrollProgress - 0.20 - stagger) / 0.55),
                         )
                         const outT = Math.max(0, Math.min(1, (exitProgress - stagger) / 0.55))
-                        const inEase = 1 - Math.pow(1 - inT, 3)
-                        const outEase = outT * outT
+                        // Reduced motion: skip the 3D flip + blur reveal — cards
+                        // are simply present (inEase=1, outEase=0 zeroes angle/blur).
+                        const inEase = prefersReduced ? 1 : 1 - Math.pow(1 - inT, 3)
+                        const outEase = prefersReduced ? 0 : outT * outT
 
                         const revealAngle = 180 * (1 - inEase) - 180 * outEase
                         const tilt = (1 - inEase) * 6 - outEase * 6
@@ -212,6 +238,12 @@ export default function ArtistCarousel({
                                         willChange: 'transform',
                                     }}
                                     onClick={() => {
+                                        // A horizontal swipe just fired — don't also
+                                        // treat the touch-release as a tap.
+                                        if (swipedRef.current) {
+                                            swipedRef.current = false
+                                            return
+                                        }
                                         if (isActive) {
                                             window.location.href = `/artist/${artist.id}`
                                         } else if (visible) {
@@ -260,10 +292,12 @@ export default function ArtistCarousel({
                         className="absolute flex justify-center"
                         style={{ bottom: 0, left: 0, right: 0, gap: 8 }}
                     >
-                        {artists.map((_, i) => (
+                        {artists.map((artist, i) => (
                             <button
                                 key={i}
                                 onClick={() => setIndex(i)}
+                                aria-label={`Ver ${artist.name}`}
+                                aria-current={i === index}
                                 className="cursor-pointer p-0"
                                 style={{
                                     width: i === index ? 28 : 8,

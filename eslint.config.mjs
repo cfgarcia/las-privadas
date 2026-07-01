@@ -12,6 +12,15 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated + tooling (not app source):
+    "coverage/**",
+    "playwright-report/**",
+    "test-results/**",
+    "scripts/**",
+    "prisma/seed.js",
+    "*.config.{js,mjs,ts}",
+    "check-admin.js",
+    "set-admin.js",
   ]),
 ]);
 

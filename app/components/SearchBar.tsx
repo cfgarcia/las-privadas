@@ -81,7 +81,7 @@ export default function SearchBar({ query, onQuery, appear, resultCount }: Searc
                     placeholder="Busca un artista…"
                     className="flex-1 bg-transparent border-0 outline-none min-w-0"
                     style={{
-                        fontFamily: 'Playfair Display, serif',
+                        fontFamily: 'var(--font-body), serif',
                         fontStyle: query ? 'normal' : 'italic',
                         fontSize: 16,
                         color: '#fcf6ba',
@@ -112,7 +112,7 @@ export default function SearchBar({ query, onQuery, appear, resultCount }: Searc
                         className="inline-flex items-center uppercase flex-shrink-0"
                         style={{
                             padding: '3px 9px',
-                            fontFamily: 'Sancreek, cursive',
+                            fontFamily: 'var(--font-accent), cursive',
                             fontSize: 9,
                             letterSpacing: '0.28em',
                             color: '#fcf6ba',
@@ -130,7 +130,7 @@ export default function SearchBar({ query, onQuery, appear, resultCount }: Searc
                 <div
                     className="uppercase"
                     style={{
-                        fontFamily: 'Sancreek, cursive',
+                        fontFamily: 'var(--font-accent), cursive',
                         fontSize: 10,
                         letterSpacing: '0.28em',
                         color: 'rgba(232,199,122,0.55)',

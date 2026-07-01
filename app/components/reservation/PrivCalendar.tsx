@@ -69,7 +69,7 @@ export default function PrivCalendar({ value, onChange }: Props) {
       }}>
         <NavBtn onClick={goPrev}>‹</NavBtn>
         <div style={{
-          fontFamily: 'Rye, serif',
+          fontFamily: 'var(--font-western), serif',
           fontSize: 14,
           color: '#E8C77A',
           letterSpacing: '0.14em',
@@ -84,7 +84,7 @@ export default function PrivCalendar({ value, onChange }: Props) {
       }}>
         {WEEK.map((w, i) => (
           <div key={i} style={{
-            fontFamily: 'Sancreek, cursive',
+            fontFamily: 'var(--font-accent), cursive',
             fontSize: 9,
             letterSpacing: '0.18em',
             textAlign: 'center',
@@ -157,7 +157,7 @@ function DayBtn({ day, past, selected, isToday, onClick }: {
       : (isToday ? '1px solid rgba(232,199,122,0.45)' : '1px solid transparent'),
     borderRadius: 2,
     color: selected ? '#2a1505' : (past ? 'rgba(252,246,186,0.18)' : '#fcf6ba'),
-    fontFamily: 'Playfair Display, serif',
+    fontFamily: 'var(--font-body), serif',
     fontSize: 12,
     fontWeight: selected ? 700 : 400,
     cursor: past ? 'not-allowed' : 'pointer',

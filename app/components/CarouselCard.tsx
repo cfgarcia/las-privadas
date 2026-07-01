@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useLanguage } from "../context/LanguageContext"
 import { useRef, useEffect } from "react"
 
@@ -78,7 +79,14 @@ export default function CarouselCard({ artist, isActive = false }: CarouselCardP
             }`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            style={{ width: 380, height: 560, transformStyle: 'preserve-3d' }}
+            data-testid={isActive ? 'artist-card-active' : undefined}
+            style={{
+                // Caps at 380px on desktop, shrinks to fit phones (no overflow at
+                // 320–375px). Height tracks width at the original 380:560 ratio.
+                width: 'min(380px, 86vw)',
+                height: 'calc(min(380px, 86vw) * 1.474)',
+                transformStyle: 'preserve-3d',
+            }}
         >
             {/* Pin-spot of warm gold light — only on active card. The lighting IS the indicator. */}
             {isActive && (
@@ -134,13 +142,21 @@ export default function CarouselCard({ artist, isActive = false }: CarouselCardP
                     }}
                 />
 
-                {/* Photo + brass plaque + chevron CTA */}
-                <div className="relative w-full h-full overflow-hidden bg-[#1a0f0a]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                {/* Photo + brass plaque + chevron CTA. The espresso gradient
+                   backdrop means transparent / portrait-cutout stills read as an
+                   intentional studio sweep instead of a black void. next/image
+                   serves a card-sized variant (sizes) instead of the full-res
+                   source — big win on mobile data. */}
+                <div
+                    className="relative w-full h-full overflow-hidden"
+                    style={{ background: 'linear-gradient(180deg, #2c1810 0%, #1a0f0a 55%, #0a0503 100%)' }}
+                >
+                    <Image
                         src={artist.imageUrl || "https://via.placeholder.com/400x600"}
                         alt={artist.name}
-                        className="w-full h-full object-cover transition-[filter,transform] duration-1000 ease-out"
+                        fill
+                        sizes="(max-width: 480px) 86vw, 380px"
+                        className="object-cover transition-[filter,transform] duration-1000 ease-out"
                         style={{
                             filter: isActive
                                 ? 'sepia(0.20) brightness(1.05) contrast(1.05)'
@@ -167,11 +183,12 @@ export default function CarouselCard({ artist, isActive = false }: CarouselCardP
                         </div>
                     )}
 
-                    {/* Dust grain */}
+                    {/* Film grain (self-contained, no network request) */}
                     <div
-                        className="absolute inset-0 pointer-events-none opacity-[0.18]"
+                        className="absolute inset-0 pointer-events-none opacity-[0.14]"
                         style={{
-                            backgroundImage: 'url(https://www.transparenttextures.com/patterns/dust.png)',
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+                            backgroundSize: '160px 160px',
                             mixBlendMode: 'overlay',
                         }}
                     />
@@ -211,7 +228,7 @@ export default function CarouselCard({ artist, isActive = false }: CarouselCardP
                         <div
                             className="uppercase mb-1.5 transition-opacity duration-500"
                             style={{
-                                fontFamily: 'Sancreek, cursive',
+                                fontFamily: 'var(--font-accent), cursive',
                                 fontSize: 9,
                                 letterSpacing: '0.30em',
                                 color: '#D4AF37',
@@ -223,7 +240,7 @@ export default function CarouselCard({ artist, isActive = false }: CarouselCardP
                         <h3
                             className="m-0 transition-[font-size] duration-500"
                             style={{
-                                fontFamily: 'Rye, serif',
+                                fontFamily: 'var(--font-western), serif',
                                 fontSize: isActive ? 26 : 21,
                                 lineHeight: 1.1,
                                 letterSpacing: '0.04em',
@@ -254,7 +271,7 @@ export default function CarouselCard({ artist, isActive = false }: CarouselCardP
                             <p
                                 className="m-0 italic line-clamp-2"
                                 style={{
-                                    fontFamily: 'Playfair Display, serif',
+                                    fontFamily: 'var(--font-body), serif',
                                     fontSize: 12,
                                     lineHeight: 1.5,
                                     color: 'rgba(252,246,186,0.7)',
